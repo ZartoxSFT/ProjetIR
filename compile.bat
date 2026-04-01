@@ -6,7 +6,7 @@ echo ===============================
 echo Compilation des servlets...
 echo ===============================
 
-cd /d "%CATALINA_HOME%\webapps\TP4\WEB-INF\classes"
+cd /d "%CATALINA_HOME%\webapps\INFO-REPARTIE\WEB-INF\classes"
 
 javac -cp ".;%CATALINA_HOME%\lib\*" *.java
 
