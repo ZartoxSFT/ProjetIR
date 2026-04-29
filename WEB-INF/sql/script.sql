@@ -36,6 +36,7 @@ CREATE TABLE fanfaron (
     genre VARCHAR(10) CHECK (genre IN ('homme', 'femme', 'autre')),
     contraintes_alimentaires VARCHAR(20)
         CHECK (contraintes_alimentaires IN ('aucune', 'vegetarien', 'vegan', 'sans porc')),
+    role VARCHAR(20) DEFAULT 'utilisateur' CHECK (role IN ('utilisateur', 'admin')),
     date_creation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     derniere_connexion TIMESTAMP NULL
 );

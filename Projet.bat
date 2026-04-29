@@ -1,18 +1,19 @@
 @echo off
 
-set "CATALINA_HOME=C:\Program Files\Apache Software Foundation\Tomcat 11.0"
+set "TOMCAT_BASE=C:\Users\darkf\Desktop\Travail\INFOREPARTIE\tomcat"
+set "CATALINA_HOME=%TOMCAT_BASE%"
 
 echo ===============================
 echo Compilation des servlets...
 echo ===============================
 
-cd /d "C:\Users\darkf\Desktop\Travail\INFOREPARTIE\tomcat\webapps\ProjetIR\WEB-INF\classes"
+cd /d "%TOMCAT_BASE%\webapps\ProjetIR\WEB-INF\classes"
 
 REM Génère la liste de tous les fichiers Java (récursif)
 dir /s /b *.java > sources.txt
 
 REM Compilation avec classpath Tomcat
-javac -cp "C:\Users\darkf\Desktop\Travail\INFOREPARTIE\tomcat\lib\servlet-api.jar" -d . @sources.txt
+javac -cp ".;%TOMCAT_BASE%\lib\servlet-api.jar;%TOMCAT_BASE%\lib\jsp-api.jar;%TOMCAT_BASE%\lib\el-api.jar" -d . @sources.txt
 
 REM Supprime le fichier temporaire
 del sources.txt
@@ -26,17 +27,17 @@ if errorlevel 1 (
 
 echo.
 echo ===============================
-echo Redemarrage du service Tomcat...
+echo Redemarrage de Tomcat...
 echo ===============================
 
-powershell -Command "Restart-Service Tomcat11"
+REM Arrête Tomcat (ignore l'erreur si Tomcat n'est pas en cours d'exécution)
+call "%TOMCAT_BASE%\bin\shutdown.bat" 2>nul
 
-if errorlevel 1 (
-    echo.
-    echo Echec du redemarrage de Tomcat. Lance ce script en administrateur.
-    pause
-    exit /b 1
-)
+REM Attends un peu
+timeout /t 2 /nobreak
+
+REM Redémarre Tomcat
+call "%TOMCAT_BASE%\bin\startup.bat"
 
 echo.
 echo ===============================

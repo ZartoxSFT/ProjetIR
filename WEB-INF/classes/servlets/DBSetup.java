@@ -1,4 +1,4 @@
-package WEB-INF.sql.classes;
+package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
