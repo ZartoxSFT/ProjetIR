@@ -2,17 +2,16 @@
 
 ## 🧠 Contexte général
 
-Projet Java Web avec :
+Projet Java Web utilisant :
 - Servlets
 - JSP
 - DAO
 - PostgreSQL
 
 Objectif :
-- gérer des utilisateurs (fanfarons)
+- gérer des fanfarons
 - inscription / connexion
-- événements (plus tard)
-- architecture propre (MVC)
+- architecture MVC propre
 
 ---
 
@@ -22,21 +21,23 @@ Objectif :
 
 ### Entités
 - FANFARON
-- INSTRUMENT (fusion pupitre)
+- INSTRUMENT
 - GROUPE_FANFARE
 - EVENEMENT
 
 ### Associations
 - FANFARON ↔ INSTRUMENT (N,N)
 - FANFARON ↔ GROUPE (N,N)
-- FANFARON ↔ EVENEMENT (organisation) N,N
-- FANFARON ↔ EVENEMENT (participation) N,N
+- FANFARON ↔ EVENEMENT (organisation)
+- FANFARON ↔ EVENEMENT (participation)
 
-### INSCRIPTION (association enrichie)
+### INSCRIPTION
 - id_fanfaron
 - id_evenement
 - id_instrument
 - statut
+
+👉 Association enrichie (important à l’oral)
 
 ---
 
@@ -53,9 +54,10 @@ Objectif :
 
 ---
 
-## ⚠️ Corrections prof
-- pas de table régime → champ direct
-- 2 relations avec événement (organiser + participer)
+## ⚠️ Remarques prof
+
+- Pas de table régime → attribut direct
+- Deux relations distinctes avec événement
 
 ---
 
@@ -64,30 +66,28 @@ Objectif :
 - PostgreSQL
 - snake_case
 - mot de passe = hash
-- contraintes CHECK (genre, contraintes_alimentaires)
+- contraintes CHECK
 
 ---
 
 # 🌐 3. Q2 - Formulaires
 
-## ✔️ Inscription
+## Inscription
 - nom_fanfaron
 - prenom
 - nom
-- email + confirmation
-- password + confirmation
+- email (+ confirmation)
+- password (+ confirmation)
 - genre
 - contraintes_alimentaires
 
-## ✔️ Connexion
+## Connexion
 - nom_fanfaron
 - password
 
 ---
 
-# 🧠 4. Architecture
-
-## MVC
+# 🧠 4. Architecture MVC
 
 - Servlet = contrôleur
 - DAO = accès données

@@ -51,4 +51,39 @@ public class InscriptionJDBCDAO {
             return false;
         }
     }
+
+    public boolean existsByNomFanfaron(String nomFanfaron) {
+        String sql = "SELECT 1 FROM fanfaron WHERE nom_fanfaron = ?";
+
+        try (Connection connexion = getConnection();
+            PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setString(1, nomFanfaron);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean existsByEmail(String email){
+        String sql = "SELECT COUNT 1 FROM fanfaron WHERE email = ?";
+
+        try (Connection connexion = getConnection();
+             PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return false;
+    }
 }
