@@ -154,7 +154,7 @@
                             <div class="form-group">
                                 <label for="nomFanfaron">Nom d'utilisateur</label>
                                 <input type="text" id="nomFanfaron" name="nomFanfaron" required
-                                    value="<%= request.getParameter(" nomFanfaron") !=null ?
+                                    value="<%= request.getParameter("nomFanfaron") !=null ?
                                     request.getParameter("nomFanfaron") : "" %>">
                             </div>
 

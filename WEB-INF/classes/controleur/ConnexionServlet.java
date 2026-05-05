@@ -25,8 +25,8 @@ public class ConnexionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String nomFanfaron = request.getParameter("nom_fanfaron");
-        String password = request.getParameter("password");
+        String nomFanfaron = request.getParameter("nomFanfaron");
+        String password = request.getParameter("motDePasse");
 
         nomFanfaron = nomFanfaron == null ? "" : nomFanfaron.trim();
         password = password == null ? "" : password;

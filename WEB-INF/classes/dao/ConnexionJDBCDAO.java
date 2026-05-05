@@ -31,7 +31,7 @@ public class ConnexionJDBCDAO {
     }
 
     public Fanfaron authenticate(String nomFanfaron, String motDePasseHash) {
-        String sql = "SELECT id, nom_fanfaron, prenom, nom, email, mot_de_passe, genre, contraintes_alimentaires, date_creation, derniere_connexion  FROM fanfaron WHERE nom_fanfaron = ? AND mot_de_passe = ?";
+        String sql = "SELECT id, nom_fanfaron, prenom, nom, email, mot_de_passe, genre, contraintes_alimentaires, date_creation, derniere_connexion, admin FROM fanfaron WHERE nom_fanfaron = ? AND mot_de_passe = ?";
 
         try (Connection connexion = getConnection();
              PreparedStatement ps = connexion.prepareStatement(sql)) {
