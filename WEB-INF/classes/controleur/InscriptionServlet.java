@@ -93,7 +93,7 @@ public class InscriptionServlet extends HttpServlet {
         boolean ok = dao.insert(fanfaron);
 
         if (ok) {
-            response.sendRedirect("/vue/connexion.jsp");
+            response.sendRedirect(request.getContextPath() + "/connexion");
         } else {
             request.setAttribute("error", "Erreur lors de l'inscription.");
             request.getRequestDispatcher("/vue/inscription.jsp").forward(request, response);
