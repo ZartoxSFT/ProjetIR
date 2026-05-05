@@ -47,11 +47,7 @@ public class ConnexionServlet extends HttpServlet {
             session.setAttribute("fanfaron", fanfaron);
             session.setAttribute("utilisateur", fanfaron);
 
-            if (fanfaron.getAdmin()) {
-                response.sendRedirect(request.getContextPath() + "/accueil");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/accueil");
-            }
+            response.sendRedirect(request.getContextPath() + "/accueil");
         } else {
             request.setAttribute("error", "Nom de fanfaron ou mot de passe incorrect.");
             request.getRequestDispatcher("/vue/connexion.jsp").forward(request, response);
