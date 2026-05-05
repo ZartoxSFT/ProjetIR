@@ -9,23 +9,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import modele.Fanfaron;
+@WebServlet("/deconnexion")
+public class DeconnexionServlet extends HttpServlet {
 
-@WebServlet("/accueil")
-public class AccueilServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("fanfaron") == null) {
-            response.sendRedirect(request.getContextPath() + "/connexion");
-            return;
+        if (session != null) {
+            session.invalidate();
         }
 
-        Fanfaron fanfaron = (Fanfaron) session.getAttribute("fanfaron");
-        request.setAttribute("fanfaron", fanfaron);
-
-        request.getRequestDispatcher("/vue/accueil.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/connexion");
     }
 }

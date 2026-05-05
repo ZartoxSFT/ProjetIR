@@ -58,6 +58,7 @@ public class ConnexionJDBCDAO {
         f.setMotDePasseHash(rs.getString("mot_de_passe"));
         f.setGenre(rs.getString("genre"));
         f.setContraintesAlimentaires(rs.getString("contraintes_alimentaires"));
+        f.setAdmin(rs.getBoolean("admin"));
         return f;
     }
 }

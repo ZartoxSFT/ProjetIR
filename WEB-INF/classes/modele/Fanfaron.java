@@ -14,6 +14,7 @@ public class Fanfaron {
     private String role;
     private Timestamp dateCreation;
     private Timestamp derniereConnexion;
+    private boolean admin;
 
     public Fanfaron() {
     }
@@ -137,5 +138,7 @@ public class Fanfaron {
         this.derniereConnexion = derniereConnexion;
     }
 
-
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 }
