@@ -307,79 +307,170 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="role">Rôle</label>
-                                                        <select id="role" name="role">
-                                                            <option value="utilisateur">Utilisateur</option>
-                                                            <option value="admin">Administrateur</option>
-                                                        </select>
+                                                        <label for="isAdmin">
+                                                            <input type="checkbox" id="isAdmin" name="isAdmin"
+                                                                value="on">
+                                                            Administrateur
+                                                        </label>
                                                     </div>
                                                 </div>
                                                 <button type="submit">Ajouter le fanfaron</button>
                                             </form>
                                         </div>
 
-                                        <!-- Section Liste des utilisateurs -->
-                                        <div class="section">
-                                            <h2>👥 Liste des fanfarons</h2>
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nom d'utilisateur</th>
-                                                        <th>Email</th>
-                                                        <th>Prénom</th>
-                                                        <th>Nom</th>
-                                                        <th>Rôle</th>
-                                                        <th>Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <% List<Fanfaron> fanfarons = (List<Fanfaron>)
-                                                            request.getAttribute("fanfarons");
-                                                            if (fanfarons != null) {
-                                                            for (Fanfaron fan : fanfarons) {
-                                                            %>
+                                        <!-- Section Modification (si un fanfaron est sélectionné) -->
+                                        <% Fanfaron fanfaronEdit=(Fanfaron) request.getAttribute("fanfaron"); if
+                                            (fanfaronEdit !=null) { %>
+                                            <div class="section" style="border-left: 4px solid var(--accent);">
+                                                <h2>✏️ Modifier le fanfaron</h2>
+                                                <form method="POST" action="admin?action=update">
+                                                    <input type="hidden" name="action" value="update">
+                                                    <input type="hidden" name="id" value="<%= fanfaronEdit.getId() %>">
+                                                    <div class="form-row">
+                                                        <div class="form-group">
+                                                            <label>Nom d'utilisateur</label>
+                                                            <input type="text"
+                                                                value="<%= fanfaronEdit.getNomFanfaron() %>" disabled
+                                                                style="background:#f5f5f5;">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="emailEdit">Email</label>
+                                                            <input type="email" id="emailEdit" name="email"
+                                                                value="<%= fanfaronEdit.getEmail() %>" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group">
+                                                            <label for="prenomEdit">Prénom</label>
+                                                            <input type="text" id="prenomEdit" name="prenom"
+                                                                value="<%= fanfaronEdit.getPrenom() %>" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="nomEdit">Nom</label>
+                                                            <input type="text" id="nomEdit" name="nom"
+                                                                value="<%= fanfaronEdit.getNom() %>" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group">
+                                                            <label for="genreEdit">Genre</label>
+                                                            <select id="genreEdit" name="genre" required>
+                                                                <option value="homme" <%="homme"
+                                                                    .equals(fanfaronEdit.getGenre()) ? "selected" : ""
+                                                                    %>>Homme</option>
+                                                                <option value="femme" <%="femme"
+                                                                    .equals(fanfaronEdit.getGenre()) ? "selected" : ""
+                                                                    %>>Femme</option>
+                                                                <option value="autre" <%="autre"
+                                                                    .equals(fanfaronEdit.getGenre()) ? "selected" : ""
+                                                                    %>>Autre</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="rolesEdit">
+                                                                <input type="checkbox" id="rolesEdit" name="isAdmin"
+                                                                    value="on" <%=fanfaronEdit.isAdmin() ? "checked"
+                                                                    : "" %>>
+                                                                Administrateur
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group">
+                                                            <label for="contraintesEdit">Contraintes
+                                                                alimentaires</label>
+                                                            <select id="contraintesEdit" name="contraintesAlimentaires">
+                                                                <option value="aucune" <%="aucune"
+                                                                    .equals(fanfaronEdit.getContraintesAlimentaires())
+                                                                    ? "selected" : "" %>>Aucune</option>
+                                                                <option value="vegetarien" <%="vegetarien"
+                                                                    .equals(fanfaronEdit.getContraintesAlimentaires())
+                                                                    ? "selected" : "" %>>Végétarien</option>
+                                                                <option value="vegan" <%="vegan"
+                                                                    .equals(fanfaronEdit.getContraintesAlimentaires())
+                                                                    ? "selected" : "" %>>Vegan</option>
+                                                                <option value="sans porc" <%="sans porc"
+                                                                    .equals(fanfaronEdit.getContraintesAlimentaires())
+                                                                    ? "selected" : "" %>>Sans porc</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit"
+                                                        style="width:48%;display:inline-block;">Enregistrer les
+                                                        modifications</button>
+                                                    <a href="admin"
+                                                        style="width:48%;display:inline-block;margin-left:2%;"><button
+                                                            type="button" class="btn-secondary"
+                                                            style="width:100%;">Annuler</button></a>
+                                                </form>
+                                            </div>
+                                            <% } %>
+
+                                                <!-- Section Liste des utilisateurs -->
+                                                <div class="section">
+                                                    <h2>👥 Liste des fanfarons</h2>
+                                                    <table>
+                                                        <thead>
                                                             <tr>
-                                                                <td>
-                                                                    <%= fan.getNomFanfaron() %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= fan.getEmail() %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= fan.getPrenom() %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= fan.getNom() %>
-                                                                </td>
-                                                                <td>
-                                                                    <span class="role-badge <%= fan.isAdmin() ? " admin"
-                                                                        : "user" %>">
-                                                                        <%= fan.getRole() %>
-                                                                    </span>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="actions">
-                                                                        <a
-                                                                            href="admin?action=edit&id=<%= fan.getId() %>">
-                                                                            <button type="button"
-                                                                                class="btn-secondary">Modifier</button>
-                                                                        </a>
-                                                                        <form method="GET" action="admin"
-                                                                            style="display:inline;">
-                                                                            <input type="hidden" name="action"
-                                                                                value="delete">
-                                                                            <input type="hidden" name="id"
-                                                                                value="<%= fan.getId() %>">
-                                                                            <button type="submit" class="btn-delete"
-                                                                                onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
-                                                                        </form>
-                                                                    </div>
-                                                                </td>
+                                                                <th>Nom d'utilisateur</th>
+                                                                <th>Email</th>
+                                                                <th>Prénom</th>
+                                                                <th>Nom</th>
+                                                                <th>Rôle</th>
+                                                                <th>Actions</th>
                                                             </tr>
-                                                            <% } } %>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% List<Fanfaron> fanfarons = (List<Fanfaron>)
+                                                                    request.getAttribute("fanfarons");
+                                                                    if (fanfarons != null) {
+                                                                    for (Fanfaron fan : fanfarons) {
+                                                                    %>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <%= fan.getNomFanfaron() %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= fan.getEmail() %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= fan.getPrenom() %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= fan.getNom() %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span
+                                                                                class="role-badge <%= fan.isAdmin() ? "
+                                                                                admin" : "user" %>">
+                                                                                <%= fan.isAdmin() ? "Admin"
+                                                                                    : "Utilisateur" %>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="actions">
+                                                                                <a
+                                                                                    href="admin?action=edit&id=<%= fan.getId() %>">
+                                                                                    <button type="button"
+                                                                                        class="btn-secondary">Modifier</button>
+                                                                                </a>
+                                                                                <form method="GET" action="admin"
+                                                                                    style="display:inline;">
+                                                                                    <input type="hidden" name="action"
+                                                                                        value="delete">
+                                                                                    <input type="hidden" name="id"
+                                                                                        value="<%= fan.getId() %>">
+                                                                                    <button type="submit"
+                                                                                        class="btn-delete"
+                                                                                        onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
+                                                                                </form>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% } } %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                     </div>
             </body>
 

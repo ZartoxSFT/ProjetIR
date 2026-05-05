@@ -24,17 +24,16 @@ public class ConnexionJDBCDAO {
         Class.forName("org.postgresql.Driver");
 
         return DriverManager.getConnection(
-            props.getProperty("db.url"),
-            props.getProperty("db.user"),
-            props.getProperty("db.password")
-        );
+                props.getProperty("db.url"),
+                props.getProperty("db.user"),
+                props.getProperty("db.password"));
     }
 
     public Fanfaron authenticate(String nomFanfaron, String motDePasseHash) {
-        String sql = "SELECT id, nom_fanfaron, prenom, nom, email, mot_de_passe, genre, contraintes_alimentaires, date_creation, derniere_connexion, admin FROM fanfaron WHERE nom_fanfaron = ? AND mot_de_passe = ?";
+        String sql = "SELECT id, nom_fanfaron, prenom, nom, email, mot_de_passe, genre, contraintes_alimentaires, admin, date_creation, derniere_connexion FROM fanfaron WHERE nom_fanfaron = ? AND mot_de_passe = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, nomFanfaron);
             ps.setString(2, motDePasseHash);
@@ -51,14 +50,16 @@ public class ConnexionJDBCDAO {
     private Fanfaron mapFanfaron(ResultSet rs) throws SQLException {
         Fanfaron f = new Fanfaron();
         f.setId(rs.getLong("id"));
-        f.setnomFanfaron(rs.getString("nom_fanfaron"));
+        f.setNomFanfaron(rs.getString("nom_fanfaron"));
         f.setPrenom(rs.getString("prenom"));
         f.setNom(rs.getString("nom"));
         f.setEmail(rs.getString("email"));
-        f.setMotDePasseHash(rs.getString("mot_de_passe"));
+        f.setMotDePasse(rs.getString("mot_de_passe"));
         f.setGenre(rs.getString("genre"));
         f.setContraintesAlimentaires(rs.getString("contraintes_alimentaires"));
-        f.setAdmin(rs.getBoolean("admin"));
+        f.setIsAdmin(rs.getBoolean("admin"));
+        f.setDateCreation(rs.getTimestamp("date_creation"));
+        f.setDerniereConnexion(rs.getTimestamp("derniere_connexion"));
         return f;
     }
 }
