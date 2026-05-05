@@ -20,27 +20,26 @@ public class InscriptionJDBCDAO {
         Class.forName("org.postgresql.Driver");
 
         return DriverManager.getConnection(
-            props.getProperty("db.url"),
-            props.getProperty("db.user"),
-            props.getProperty("db.password")
-        );
+                props.getProperty("db.url"),
+                props.getProperty("db.user"),
+                props.getProperty("db.password"));
     }
 
     public boolean insert(Fanfaron f) {
         String sql = """
-            INSERT INTO fanfaron
-            (nom_fanfaron, prenom, nom, email, mot_de_passe, genre, contraintes_alimentaires)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        """;
+                    INSERT INTO fanfaron
+                    (nom_fanfaron, prenom, nom, email, mot_de_passe, genre, contraintes_alimentaires)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """;
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
-            ps.setString(1, f.getnomFanfaron());
+            ps.setString(1, f.getNomFanfaron());
             ps.setString(2, f.getPrenom());
             ps.setString(3, f.getNom());
             ps.setString(4, f.getEmail());
-            ps.setString(5, f.getMotDePasseHash());
+            ps.setString(5, f.getMotDePasse());
             ps.setString(6, f.getGenre());
             ps.setString(7, f.getContraintesAlimentaires());
 
@@ -56,7 +55,7 @@ public class InscriptionJDBCDAO {
         String sql = "SELECT 1 FROM fanfaron WHERE nom_fanfaron = ?";
 
         try (Connection connexion = getConnection();
-            PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, nomFanfaron);
             ResultSet rs = ps.executeQuery();
@@ -69,11 +68,11 @@ public class InscriptionJDBCDAO {
         }
     }
 
-    public boolean existsByEmail(String email){
+    public boolean existsByEmail(String email) {
         String sql = "SELECT 1 FROM fanfaron WHERE email = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();

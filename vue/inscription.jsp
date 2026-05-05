@@ -165,130 +165,141 @@
                 <div class="content">
                     <h2 style="text-align: center; color: var(--accent); margin-top: 0;">Inscription</h2>
 
-                    <% Map<String, String> erreurs = (Map<String, String>) request.getAttribute("erreurs");
-                            if (erreurs != null && !erreurs.isEmpty()) {
-                            for (String erreur : erreurs.values()) {
-                            %>
-                            <div class="error">
-                                <%= erreur %>
+                    <% java.util.Map<String, String> erreurs = (java.util.Map<String, String>)
+                            request.getAttribute("erreurs");
+                            if (request.getAttribute("success") != null) { %>
+                            <div
+                                style="background:#e6ffed;border-left:4px solid #28a745;color:#155724;padding:12px;margin-bottom:20px;border-radius:4px;">
+                                <%= request.getAttribute("success") %>
                             </div>
-                            <% } } %>
+                            <% } %>
+                                <% if (erreurs !=null && !erreurs.isEmpty()) { for (String erreur : erreurs.values()) {
+                                    %>
+                                    <div class="error">
+                                        <%= erreur %>
+                                    </div>
+                                    <% } } %>
 
-                                <form method="POST" action="inscription">
-                                    <div class="form-row full">
-                                        <div class="form-group">
-                                            <label for="nomFanfaron">Nom d'utilisateur *</label>
-                                            <input type="text" id="nomFanfaron" name="nomFanfaron" required
-                                                value="<%= request.getAttribute(" nomFanfaron") !=null ?
-                                                request.getAttribute("nomFanfaron") : "" %>">
-                                            <% if (erreurs !=null && erreurs.containsKey("nomFanfaron")) { %>
-                                                <div class="error-message">
-                                                    <%= erreurs.get("nomFanfaron") %>
+                                        <form method="POST" action="inscription">
+                                            <div class="form-row full">
+                                                <div class="form-group">
+                                                    <label for="nomFanfaron">Nom d'utilisateur *</label>
+                                                    <input type="text" id="nomFanfaron" name="nomFanfaron" required
+                                                        value="<%= request.getAttribute(" nomFanfaron") !=null ?
+                                                        request.getAttribute("nomFanfaron") : "" %>">
+                                                    <% if (erreurs !=null && erreurs.containsKey("nomFanfaron")) { %>
+                                                        <div class="error-message">
+                                                            <%= erreurs.get("nomFanfaron") %>
+                                                        </div>
+                                                        <% } %>
                                                 </div>
-                                                <% } %>
-                                        </div>
-                                    </div>
+                                            </div>
 
-                                    <div class="form-row full">
-                                        <div class="form-group">
-                                            <label for="email">Email *</label>
-                                            <input type="email" id="email" name="email" required
-                                                value="<%= request.getAttribute(" email") !=null ?
-                                                request.getAttribute("email") : "" %>">
-                                            <% if (erreurs !=null && erreurs.containsKey("email")) { %>
-                                                <div class="error-message">
-                                                    <%= erreurs.get("email") %>
+                                            <div class="form-row full">
+                                                <div class="form-group">
+                                                    <label for="email">Email *</label>
+                                                    <input type="email" id="email" name="email" required
+                                                        value="<%= request.getAttribute(" email") !=null ?
+                                                        request.getAttribute("email") : "" %>">
+                                                    <% if (erreurs !=null && erreurs.containsKey("email")) { %>
+                                                        <div class="error-message">
+                                                            <%= erreurs.get("email") %>
+                                                        </div>
+                                                        <% } %>
                                                 </div>
-                                                <% } %>
-                                        </div>
-                                    </div>
+                                            </div>
 
-                                    <div class="form-row full">
-                                        <div class="form-group">
-                                            <label for="emailConfirm">Confirmer l'email *</label>
-                                            <input type="email" id="emailConfirm" name="emailConfirm" required>
-                                            <% if (erreurs !=null && erreurs.containsKey("emailConfirm")) { %>
-                                                <div class="error-message">
-                                                    <%= erreurs.get("emailConfirm") %>
+                                            <div class="form-row full">
+                                                <div class="form-group">
+                                                    <label for="emailConfirm">Confirmer l'email *</label>
+                                                    <input type="email" id="emailConfirm" name="emailConfirm" required>
+                                                    <% if (erreurs !=null && erreurs.containsKey("emailConfirm")) { %>
+                                                        <div class="error-message">
+                                                            <%= erreurs.get("emailConfirm") %>
+                                                        </div>
+                                                        <% } %>
                                                 </div>
-                                                <% } %>
-                                        </div>
-                                    </div>
+                                            </div>
 
-                                    <div class="form-row full">
-                                        <div class="form-group">
-                                            <label for="motDePasse">Mot de passe *</label>
-                                            <input type="password" id="motDePasse" name="motDePasse" required>
-                                            <% if (erreurs !=null && erreurs.containsKey("motDePasse")) { %>
-                                                <div class="error-message">
-                                                    <%= erreurs.get("motDePasse") %>
+                                            <div class="form-row full">
+                                                <div class="form-group">
+                                                    <label for="motDePasse">Mot de passe *</label>
+                                                    <input type="password" id="motDePasse" name="motDePasse" required>
+                                                    <% if (erreurs !=null && erreurs.containsKey("motDePasse")) { %>
+                                                        <div class="error-message">
+                                                            <%= erreurs.get("motDePasse") %>
+                                                        </div>
+                                                        <% } %>
                                                 </div>
-                                                <% } %>
-                                        </div>
-                                    </div>
+                                            </div>
 
-                                    <div class="form-row full">
-                                        <div class="form-group">
-                                            <label for="motDePasseConfirm">Confirmer le mot de passe *</label>
-                                            <input type="password" id="motDePasseConfirm" name="motDePasseConfirm"
-                                                required>
-                                            <% if (erreurs !=null && erreurs.containsKey("motDePasseConfirm")) { %>
-                                                <div class="error-message">
-                                                    <%= erreurs.get("motDePasseConfirm") %>
+                                            <div class="form-row full">
+                                                <div class="form-group">
+                                                    <label for="motDePasseConfirm">Confirmer le mot de passe *</label>
+                                                    <input type="password" id="motDePasseConfirm"
+                                                        name="motDePasseConfirm" required>
+                                                    <% if (erreurs !=null && erreurs.containsKey("motDePasseConfirm")) {
+                                                        %>
+                                                        <div class="error-message">
+                                                            <%= erreurs.get("motDePasseConfirm") %>
+                                                        </div>
+                                                        <% } %>
                                                 </div>
-                                                <% } %>
-                                        </div>
-                                    </div>
+                                            </div>
 
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="prenom">Prénom *</label>
-                                            <input type="text" id="prenom" name="prenom" required
-                                                value="<%= request.getAttribute(" prenom") !=null ?
-                                                request.getAttribute("prenom") : "" %>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="nom">Nom *</label>
-                                            <input type="text" id="nom" name="nom" required
-                                                value="<%= request.getAttribute(" nom") !=null ?
-                                                request.getAttribute("nom") : "" %>">
-                                        </div>
-                                    </div>
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="prenom">Prénom *</label>
+                                                    <input type="text" id="prenom" name="prenom" required
+                                                        value="<%= request.getAttribute(" prenom") !=null ?
+                                                        request.getAttribute("prenom") : "" %>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="nom">Nom *</label>
+                                                    <input type="text" id="nom" name="nom" required
+                                                        value="<%= request.getAttribute(" nom") !=null ?
+                                                        request.getAttribute("nom") : "" %>">
+                                                </div>
+                                            </div>
 
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="genre">Genre *</label>
-                                            <select id="genre" name="genre" required>
-                                                <option value="">-- Sélectionner --</option>
-                                                <option value="homme" <%="homme" .equals(request.getAttribute("genre"))
-                                                    ? "selected" : "" %>>Homme</option>
-                                                <option value="femme" <%="femme" .equals(request.getAttribute("genre"))
-                                                    ? "selected" : "" %>>Femme</option>
-                                                <option value="autre" <%="autre" .equals(request.getAttribute("genre"))
-                                                    ? "selected" : "" %>>Autre</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="contraintesAlimentaires">Contraintes alimentaires</label>
-                                            <select id="contraintesAlimentaires" name="contraintesAlimentaires">
-                                                <option value="aucune" <%="aucune"
-                                                    .equals(request.getAttribute("contraintesAlimentaires"))
-                                                    ? "selected" : "" %>>Aucune</option>
-                                                <option value="vegetarien" <%="vegetarien"
-                                                    .equals(request.getAttribute("contraintesAlimentaires"))
-                                                    ? "selected" : "" %>>Végétarien</option>
-                                                <option value="vegan" <%="vegan"
-                                                    .equals(request.getAttribute("contraintesAlimentaires"))
-                                                    ? "selected" : "" %>>Vegan</option>
-                                                <option value="sans porc" <%="sans porc"
-                                                    .equals(request.getAttribute("contraintesAlimentaires"))
-                                                    ? "selected" : "" %>>Sans porc</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="genre">Genre *</label>
+                                                    <select id="genre" name="genre" required>
+                                                        <option value="">-- Sélectionner --</option>
+                                                        <option value="homme" <%="homme"
+                                                            .equals(request.getAttribute("genre")) ? "selected" : "" %>
+                                                            >Homme</option>
+                                                        <option value="femme" <%="femme"
+                                                            .equals(request.getAttribute("genre")) ? "selected" : "" %>
+                                                            >Femme</option>
+                                                        <option value="autre" <%="autre"
+                                                            .equals(request.getAttribute("genre")) ? "selected" : "" %>
+                                                            >Autre</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="contraintesAlimentaires">Contraintes
+                                                        alimentaires</label>
+                                                    <select id="contraintesAlimentaires" name="contraintesAlimentaires">
+                                                        <option value="aucune" <%="aucune"
+                                                            .equals(request.getAttribute("contraintesAlimentaires"))
+                                                            ? "selected" : "" %>>Aucune</option>
+                                                        <option value="vegetarien" <%="vegetarien"
+                                                            .equals(request.getAttribute("contraintesAlimentaires"))
+                                                            ? "selected" : "" %>>Végétarien</option>
+                                                        <option value="vegan" <%="vegan"
+                                                            .equals(request.getAttribute("contraintesAlimentaires"))
+                                                            ? "selected" : "" %>>Vegan</option>
+                                                        <option value="sans porc" <%="sans porc"
+                                                            .equals(request.getAttribute("contraintesAlimentaires"))
+                                                            ? "selected" : "" %>>Sans porc</option>
+                                                    </select>
+                                                </div>
+                                            </div>
 
-                                    <button type="submit">S'inscrire</button>
-                                </form>
+                                            <button type="submit">S'inscrire</button>
+                                        </form>
                 </div>
                 <div class="footer">
                     Vous avez un compte ? <a href="connexion">Se connecter</a>
