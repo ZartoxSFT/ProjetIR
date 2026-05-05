@@ -48,7 +48,7 @@ public class ConnexionServlet extends HttpServlet {
             session.setAttribute("utilisateur", fanfaron);
 
             if (fanfaron.getAdmin()) {
-                response.sendRedirect(request.getContextPath() + "/admin");
+                response.sendRedirect(request.getContextPath() + "/accueil");
             } else {
                 response.sendRedirect(request.getContextPath() + "/accueil");
             }
