@@ -70,7 +70,7 @@ public class InscriptionJDBCDAO {
     }
 
     public boolean existsByEmail(String email){
-        String sql = "SELECT COUNT 1 FROM fanfaron WHERE email = ?";
+        String sql = "SELECT 1 FROM fanfaron WHERE email = ?";
 
         try (Connection connexion = getConnection();
              PreparedStatement ps = connexion.prepareStatement(sql)) {
