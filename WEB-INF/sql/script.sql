@@ -153,3 +153,8 @@ INSERT INTO groupe_fanfare (nom) VALUES
 ('commission artistique'),
 ('commission logistique'),
 ('commission communication interne');
+
+-- Création Admin Nom d'utilisateur : admin mot de passe : admin
+
+INSERT INTO fanfaron (nom_fanfaron, email, mot_de_passe, prenom, nom, genre, contraintes_alimentaires, admin) VALUES
+('admin', 'admin@gmail.com', 'jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=', 'admin', 'admin', 'homme', 'vegetarien', TRUE);
