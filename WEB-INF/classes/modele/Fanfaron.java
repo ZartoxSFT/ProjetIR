@@ -11,7 +11,6 @@ public class Fanfaron {
     private String motDePasseHash;
     private String genre;
     private String contraintesAlimentaires;
-    private String role;
     private Timestamp dateCreation;
     private Timestamp derniereConnexion;
     private boolean admin;
@@ -27,7 +26,7 @@ public class Fanfaron {
         this.motDePasseHash = motDePasseHash;
         this.genre = genre;
         this.contraintesAlimentaires = contraintesAlimentaires;
-        this.role = "utilisateur";
+        this.admin = false; // Par défaut, un nouveau fanfaron n'est pas admin
     }
 
     public Long getId() {
@@ -110,16 +109,12 @@ public class Fanfaron {
         this.contraintesAlimentaires = contraintesAlimentaires;
     }
 
-    public String getRole() {
-        return role;
+    public boolean getAdmin() {
+        return admin;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public boolean isAdmin() {
-        return "admin".equals(role);
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
     public Timestamp getDateCreation() {
@@ -136,9 +131,5 @@ public class Fanfaron {
 
     public void setDerniereConnexion(Timestamp derniereConnexion) {
         this.derniereConnexion = derniereConnexion;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
     }
 }

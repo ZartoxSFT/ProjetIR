@@ -230,12 +230,12 @@
 
             <body>
                 <% Fanfaron utilisateur=(Fanfaron) session.getAttribute("utilisateur"); if (utilisateur==null ||
-                    !utilisateur.isAdmin()) { response.sendRedirect("connexion"); return; } %>
+                    !utilisateur.getAdmin()) { response.sendRedirect("connexion"); return; } %>
 
                     <header>
                         <h1>🎺 FanfareHub - Administration</h1>
                         <nav>
-                            <a href="dashboard">Tableau de bord</a>
+                            <a href="accueil">Accueil</a>
                             <a href="deconnexion">Déconnexion</a>
                         </nav>
                     </header>
@@ -369,7 +369,7 @@
                                                         <div class="form-group">
                                                             <label for="rolesEdit">
                                                                 <input type="checkbox" id="rolesEdit" name="isAdmin"
-                                                                    value="on" <%=fanfaronEdit.isAdmin() ? "checked"
+                                                                    value="on" <%=fanfaronEdit.getAdmin() ? "checked"
                                                                     : "" %>>
                                                                 Administrateur
                                                             </label>
@@ -440,10 +440,8 @@
                                                                             <%= fan.getNom() %>
                                                                         </td>
                                                                         <td>
-                                                                            <span
-                                                                                class="role-badge <%= fan.isAdmin() ? "
-                                                                                admin" : "user" %>">
-                                                                                <%= fan.isAdmin() ? "Admin"
+                                                                            <span class='role-badge <%= fan.getAdmin() ? "admin" : "user" %>'>
+                                                                                <%= fan.getAdmin() ? "Admin"
                                                                                     : "Utilisateur" %>
                                                                             </span>
                                                                         </td>

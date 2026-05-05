@@ -95,7 +95,7 @@ public class FanfaronDAO {
     public void create(Fanfaron fanfaron) throws SQLException {
         String sql = """
             INSERT INTO fanfaron
-            (nom_fanfaron, email, mot_de_passe, prenom, nom, genre, contraintes_alimentaires, role)
+            (nom_fanfaron, email, mot_de_passe, prenom, nom, genre, contraintes_alimentaires, admin)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
@@ -109,7 +109,7 @@ public class FanfaronDAO {
             ps.setString(5, fanfaron.getNom());
             ps.setString(6, fanfaron.getGenre());
             ps.setString(7, fanfaron.getContraintesAlimentaires());
-            ps.setString(8, fanfaron.getRole() == null ? "utilisateur" : fanfaron.getRole());
+            ps.setBoolean(8, fanfaron.getAdmin());
 
             ps.executeUpdate();
 
@@ -125,7 +125,7 @@ public class FanfaronDAO {
         String sql = """
             UPDATE fanfaron
             SET nom_fanfaron = ?, email = ?, prenom = ?, nom = ?, genre = ?,
-                contraintes_alimentaires = ?, role = ?
+                contraintes_alimentaires = ?, admin = ?
             WHERE id = ?
         """;
 
@@ -138,7 +138,7 @@ public class FanfaronDAO {
             ps.setString(4, fanfaron.getNom());
             ps.setString(5, fanfaron.getGenre());
             ps.setString(6, fanfaron.getContraintesAlimentaires());
-            ps.setString(7, fanfaron.getRole());
+            ps.setBoolean(7, fanfaron.getAdmin());
             ps.setLong(8, fanfaron.getId());
 
             ps.executeUpdate();
@@ -152,18 +152,6 @@ public class FanfaronDAO {
              PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setInt(1, id);
-            ps.executeUpdate();
-        }
-    }
-
-    public void updateRole(int id, String role) throws SQLException {
-        String sql = "UPDATE fanfaron SET role = ? WHERE id = ?";
-
-        try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
-
-            ps.setString(1, role);
-            ps.setInt(2, id);
             ps.executeUpdate();
         }
     }
@@ -189,7 +177,7 @@ public class FanfaronDAO {
         fanfaron.setNom(rs.getString("nom"));
         fanfaron.setGenre(rs.getString("genre"));
         fanfaron.setContraintesAlimentaires(rs.getString("contraintes_alimentaires"));
-        fanfaron.setRole(rs.getString("role"));
+        fanfaron.setAdmin(rs.getBoolean("admin"));
         fanfaron.setDateCreation(rs.getTimestamp("date_creation"));
         fanfaron.setDerniereConnexion(rs.getTimestamp("derniere_connexion"));
         return fanfaron;

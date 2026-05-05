@@ -25,7 +25,7 @@ public class AdminServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Fanfaron utilisateur = (Fanfaron) session.getAttribute("utilisateur");
 
-        if (utilisateur == null || !utilisateur.isAdmin()) {
+        if (utilisateur == null || !utilisateur.getAdmin()) {
             response.sendRedirect(request.getContextPath() + "/connexion");
             return;
         }
@@ -60,7 +60,7 @@ public class AdminServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Fanfaron utilisateur = (Fanfaron) session.getAttribute("utilisateur");
 
-        if (utilisateur == null || !utilisateur.isAdmin()) {
+        if (utilisateur == null || !utilisateur.getAdmin()) {
             response.sendRedirect(request.getContextPath() + "/connexion");
             return;
         }
@@ -111,7 +111,7 @@ public class AdminServlet extends HttpServlet {
         fanfaron.setMotDePasse(motDePasseHash);
         fanfaron.setGenre(genre);
         fanfaron.setContraintesAlimentaires(contraintes);
-        fanfaron.setIsAdmin(isAdmin);
+        fanfaron.setAdmin(isAdmin);
 
         if (dao.addFanfaron(fanfaron)) {
             request.setAttribute("succes", "Fanfaron ajouté avec succès.");
@@ -136,7 +136,7 @@ public class AdminServlet extends HttpServlet {
         fanfaron.setEmail(email);
         fanfaron.setGenre(genre);
         fanfaron.setContraintesAlimentaires(contraintes);
-        fanfaron.setIsAdmin(isAdmin);
+        fanfaron.setAdmin(isAdmin);
 
         if (dao.updateFanfaron(fanfaron)) {
             request.setAttribute("succes", "Fanfaron modifié avec succès.");

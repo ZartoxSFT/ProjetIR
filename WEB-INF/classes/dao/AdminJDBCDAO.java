@@ -64,7 +64,7 @@ public class AdminJDBCDAO {
             ps.setString(5, f.getMotDePasse());
             ps.setString(6, f.getGenre());
             ps.setString(7, f.getContraintesAlimentaires());
-            ps.setBoolean(8, f.isAdmin());
+            ps.setBoolean(8, f.getAdmin());
 
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -140,7 +140,7 @@ public class AdminJDBCDAO {
         f.setMotDePasse(rs.getString("mot_de_passe"));
         f.setGenre(rs.getString("genre"));
         f.setContraintesAlimentaires(rs.getString("contraintes_alimentaires"));
-        f.setIsAdmin(rs.getBoolean("admin"));
+        f.setAdmin(rs.getBoolean("admin"));
         f.setDateCreation(rs.getTimestamp("date_creation"));
         f.setDerniereConnexion(rs.getTimestamp("derniere_connexion"));
         return f;

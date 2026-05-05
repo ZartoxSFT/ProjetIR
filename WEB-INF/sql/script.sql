@@ -38,7 +38,8 @@ CREATE TABLE fanfaron (
         CHECK (contraintes_alimentaires IN ('aucune', 'vegetarien', 'vegan', 'sans porc')),
     role VARCHAR(20) DEFAULT 'utilisateur' CHECK (role IN ('utilisateur', 'admin')),
     date_creation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    derniere_connexion TIMESTAMP NULL
+    derniere_connexion TIMESTAMP NULL,
+    admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- =========================
