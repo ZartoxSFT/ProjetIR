@@ -105,7 +105,7 @@ public class AdminJDBCDAO {
             ps.setString(3, f.getEmail());
             ps.setString(4, f.getGenre());
             ps.setString(5, f.getContraintesAlimentaires());
-            ps.setBoolean(6, f.isAdmin());
+            ps.setBoolean(6, f.getAdmin());
             ps.setLong(7, f.getId());
 
             return ps.executeUpdate() > 0;
