@@ -1,6 +1,5 @@
 package modele;
 
-import java.util.Date;
 import java.sql.Timestamp;
 
 public class Fanfaron {
@@ -12,20 +11,22 @@ public class Fanfaron {
     private String motDePasseHash;
     private String genre;
     private String contraintesAlimentaires;
+    private String role;
     private Timestamp dateCreation;
     private Timestamp derniereConnexion;
 
     public Fanfaron() {
     }
 
-    public Fanfaron(String nom, String nomFanfaron, String prenom, String email, String motDePasseHash, String genre, String contraintesAlimentaires) {
-        this.nom = nom;
+    public Fanfaron(String nomFanfaron, String prenom, String nom, String email, String motDePasseHash, String genre, String contraintesAlimentaires) {
         this.nomFanfaron = nomFanfaron;
         this.prenom = prenom;
+        this.nom = nom;
         this.email = email;
         this.motDePasseHash = motDePasseHash;
         this.genre = genre;
         this.contraintesAlimentaires = contraintesAlimentaires;
+        this.role = "utilisateur";
     }
 
     public Long getId() {
@@ -49,6 +50,14 @@ public class Fanfaron {
     }
 
     public void setnomFanfaron(String nomFanfaron) {
+        this.nomFanfaron = nomFanfaron;
+    }
+
+    public String getNomFanfaron() {
+        return nomFanfaron;
+    }
+
+    public void setNomFanfaron(String nomFanfaron) {
         this.nomFanfaron = nomFanfaron;
     }
 
@@ -76,6 +85,14 @@ public class Fanfaron {
         this.motDePasseHash = motDePasseHash;
     }
 
+    public String getMotDePasse() {
+        return motDePasseHash;
+    }
+
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasseHash = motDePasse;
+    }
+
     public String getGenre() {
         return genre;
     }
@@ -90,6 +107,18 @@ public class Fanfaron {
 
     public void setContraintesAlimentaires(String contraintesAlimentaires) {
         this.contraintesAlimentaires = contraintesAlimentaires;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public boolean isAdmin() {
+        return "admin".equals(role);
     }
 
     public Timestamp getDateCreation() {
