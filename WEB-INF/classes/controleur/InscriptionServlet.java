@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.annotation.WebServlet;
-import dao.InscriptionJDBCDAO;
+import dao.FanfaronDAO;
 import modele.Fanfaron;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -90,13 +90,18 @@ public class InscriptionServlet extends HttpServlet {
             erreurs.put("motDePasseConfirm", "Les mots de passe ne correspondent pas.");
         }
 
-        InscriptionJDBCDAO dao = new InscriptionJDBCDAO();
+        FanfaronDAO dao = new FanfaronDAO();
+        try {
         if (dao.existsByNomFanfaron(nomFanfaron)) {
             erreurs.put("nomFanfaron", "Ce nom de fanfaron est déjà pris.");
         }
 
         if (dao.existsByEmail(email)) {
             erreurs.put("email", "Cette adresse email est déjà utilisée.");
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            erreurs.put("global", "Erreur lors de la verification des informations. Reessayez plus tard.");
         }
 
         if (!erreurs.isEmpty()) {
@@ -122,7 +127,7 @@ public class InscriptionServlet extends HttpServlet {
                 genre,
                 contraintes);
 
-        boolean ok = dao.insert(fanfaron);
+        boolean ok = dao.addFanfaron(fanfaron);
 
         if (ok) {
             request.setAttribute("success", "Inscription réussie. Vous pouvez vous connecter.");

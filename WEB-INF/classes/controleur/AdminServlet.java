@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.annotation.WebServlet;
-import dao.AdminJDBCDAO;
+import dao.FanfaronDAO;
 import modele.Fanfaron;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -31,7 +31,7 @@ public class AdminServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        AdminJDBCDAO dao = new AdminJDBCDAO();
+        FanfaronDAO dao = new FanfaronDAO();
 
         if ("delete".equals(action)) {
             long id = Long.parseLong(request.getParameter("id"));
@@ -66,7 +66,7 @@ public class AdminServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        AdminJDBCDAO dao = new AdminJDBCDAO();
+        FanfaronDAO dao = new FanfaronDAO();
 
         if ("add".equals(action)) {
             handleAddFanfaron(request, dao);
@@ -82,7 +82,7 @@ public class AdminServlet extends HttpServlet {
         request.getRequestDispatcher("/vue/admin.jsp").forward(request, response);
     }
 
-    private void handleAddFanfaron(HttpServletRequest request, AdminJDBCDAO dao) {
+    private void handleAddFanfaron(HttpServletRequest request, FanfaronDAO dao) {
         String nomFanfaron = request.getParameter("nomFanfaron");
         String prenom = request.getParameter("prenom");
         String nom = request.getParameter("nom");
@@ -120,7 +120,7 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-    private void handleUpdateFanfaron(HttpServletRequest request, AdminJDBCDAO dao) {
+    private void handleUpdateFanfaron(HttpServletRequest request, FanfaronDAO dao) {
         long id = Long.parseLong(request.getParameter("id"));
         String prenom = request.getParameter("prenom");
         String nom = request.getParameter("nom");

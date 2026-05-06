@@ -1,38 +1,11 @@
 package dao;
 
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import modele.Fanfaron;
 
-public class FanfaronDAO {
-
-    private Connection getConnection() throws SQLException {
-        try {
-            Properties props = new Properties();
-            InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties");
-
-            if (input == null) {
-                throw new SQLException("Fichier db.properties introuvable");
-            }
-
-            props.load(input);
-            Class.forName("org.postgresql.Driver");
-
-            return DriverManager.getConnection(
-                props.getProperty("db.url"),
-                props.getProperty("db.user"),
-                props.getProperty("db.password")
-            );
-        } catch (Exception e) {
-            if (e instanceof SQLException) {
-                throw (SQLException) e;
-            }
-            throw new SQLException("Impossible d'ouvrir la connexion a la base", e);
-        }
-    }
+public class FanfaronDAO extends BaseDAO {
 
     public Fanfaron getById(int id) throws SQLException {
         String sql = "SELECT * FROM fanfaron WHERE id = ?";
@@ -164,6 +137,122 @@ public class FanfaronDAO {
 
             ps.setLong(1, id);
             ps.executeUpdate();
+        }
+    }
+
+    public Fanfaron authenticate(String nomFanfaron, String motDePasseHash) throws SQLException {
+        String sql = "SELECT * FROM fanfaron WHERE nom_fanfaron = ? AND mot_de_passe = ?";
+
+        try (Connection connexion = getConnection();
+             PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setString(1, nomFanfaron);
+            ps.setString(2, motDePasseHash);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? mapFanfaron(rs) : null;
+            }
+        }
+    }
+
+    public boolean existsByNomFanfaron(String nomFanfaron) throws SQLException {
+        String sql = "SELECT 1 FROM fanfaron WHERE nom_fanfaron = ?";
+
+        try (Connection connexion = getConnection();
+             PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setString(1, nomFanfaron);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    public boolean existsByEmail(String email) throws SQLException {
+        String sql = "SELECT 1 FROM fanfaron WHERE email = ?";
+
+        try (Connection connexion = getConnection();
+             PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    public List<Fanfaron> getAllFanfarons() {
+        String sql = "SELECT * FROM fanfaron ORDER BY nom_fanfaron";
+        List<Fanfaron> fanfarons = new ArrayList<>();
+
+        try (Connection connexion = getConnection();
+             PreparedStatement ps = connexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                fanfarons.add(mapFanfaron(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return fanfarons;
+    }
+
+    public Fanfaron getFanfaronById(long id) {
+        try {
+            return getById((int) id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean addFanfaron(Fanfaron fanfaron) {
+        try {
+            create(fanfaron);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateFanfaron(Fanfaron fanfaron) {
+        String sql = """
+            UPDATE fanfaron
+            SET prenom = ?, nom = ?, email = ?, genre = ?,
+                contraintes_alimentaires = ?, admin = ?
+            WHERE id = ?
+        """;
+
+        try (Connection connexion = getConnection();
+             PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setString(1, fanfaron.getPrenom());
+            ps.setString(2, fanfaron.getNom());
+            ps.setString(3, fanfaron.getEmail());
+            ps.setString(4, fanfaron.getGenre());
+            ps.setString(5, fanfaron.getContraintesAlimentaires());
+            ps.setBoolean(6, fanfaron.getAdmin());
+            ps.setLong(7, fanfaron.getId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteFanfaron(long id) {
+        try {
+            delete((int) id);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

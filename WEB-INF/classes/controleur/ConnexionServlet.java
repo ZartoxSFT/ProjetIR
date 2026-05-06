@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.annotation.WebServlet;
-import dao.ConnexionJDBCDAO;
+import dao.FanfaronDAO;
 import modele.Fanfaron;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -39,8 +39,17 @@ public class ConnexionServlet extends HttpServlet {
 
         String motDePasseHash = hashPassword(password);
 
-        ConnexionJDBCDAO dao = new ConnexionJDBCDAO();
-        Fanfaron fanfaron = dao.authenticate(nomFanfaron, motDePasseHash);
+        FanfaronDAO dao = new FanfaronDAO();
+        Fanfaron fanfaron;
+
+        try {
+            fanfaron = dao.authenticate(nomFanfaron, motDePasseHash);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Erreur lors de la connexion. Reessayez plus tard.");
+            request.getRequestDispatcher("/vue/connexion.jsp").forward(request, response);
+            return;
+        }
 
         if (fanfaron != null) {
             HttpSession session = request.getSession();
