@@ -35,7 +35,7 @@ public class EvenementJDBCDAO {
     }
 
     public List<Evenement> getAllEvenements() {
-        String sql = "SELECT id, type_evenement, nom, horodatage, duree, lieu, description FROM evenement ORDER BY horodatage DESC";
+        String sql = "SELECT id, nom, horodatage, duree, lieu, description FROM evenement ORDER BY horodatage DESC";
         List<Evenement> evenements = new ArrayList<>();
 
         try (Connection connexion = getConnection();
@@ -53,19 +53,18 @@ public class EvenementJDBCDAO {
     }
 
     public boolean insertAvecOrganisateur(Evenement evenement, long idFanfaron) {
-        String sqlEvenement = "INSERT INTO evenement (type_evenement, nom, horodatage, duree, lieu, description) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlEvenement = "INSERT INTO evenement (nom, horodatage, duree, lieu, description) VALUES (?, ?, ?, ?, ?)";
         String sqlOrganisation = "INSERT INTO organisation_evenement (id_fanfaron, id_evenement) VALUES (?, ?)";
 
         try (Connection connexion = getConnection()) {
             connexion.setAutoCommit(false);
 
             try (PreparedStatement ps = connexion.prepareStatement(sqlEvenement, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, evenement.getTypeEvenement());
-                ps.setString(2, evenement.getNom());
-                ps.setTimestamp(3, evenement.getHorodatage());
-                ps.setInt(4, evenement.getDuree());
-                ps.setString(5, evenement.getLieu());
-                ps.setString(6, evenement.getDescription());
+                ps.setString(1, evenement.getNom());
+                ps.setTimestamp(2, evenement.getHorodatage());
+                ps.setInt(3, evenement.getDuree());
+                ps.setString(4, evenement.getLieu());
+                ps.setString(5, evenement.getDescription());
 
                 int count = ps.executeUpdate();
                 if (count == 0) {
@@ -95,7 +94,7 @@ public class EvenementJDBCDAO {
     }
 
     public Evenement getById(int id) throws SQLException {
-        String sql = "SELECT id, type_evenement, nom, horodatage, duree, lieu, description FROM evenement WHERE id = ?";
+        String sql = "SELECT id, nom, horodatage, duree, lieu, description FROM evenement WHERE id = ?";
 
         try (Connection connexion = getConnection();
                 PreparedStatement ps = connexion.prepareStatement(sql)) {
@@ -130,7 +129,6 @@ public class EvenementJDBCDAO {
     private Evenement mapEvenement(ResultSet rs) throws SQLException {
         Evenement evenement = new Evenement();
         evenement.setId(rs.getInt("id"));
-        evenement.setTypeEvenement(rs.getString("type_evenement"));
         evenement.setNom(rs.getString("nom"));
         evenement.setHorodatage(rs.getTimestamp("horodatage"));
         evenement.setDuree(rs.getInt("duree"));
