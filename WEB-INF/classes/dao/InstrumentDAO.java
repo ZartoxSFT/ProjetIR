@@ -65,4 +65,46 @@ public class InstrumentDAO extends BaseDAO {
         }
         return groupes;
     }
+
+    public List<Long> findInstrumentIdsByFanfaron(Long idFanfaron){
+        List<Long> instrumentIds = new ArrayList<>();
+        String sql = "SELECT id_instrument FROM fanfaron_instrument WHERE id_fanfaron = ?";
+
+        try (Connection connexion = getConnection();
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setLong(1, idFanfaron);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    instrumentIds.add(rs.getLong("id_instrument"));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return instrumentIds;
+        }
+        return instrumentIds;
+    }
+
+    public List<Long> findGroupeIdsByFanfaron(Long idFanfaron){
+        List<Long> groupeIds = new ArrayList<>();
+        String sql = "SELECT id_groupe FROM fanfaron_groupe WHERE id_fanfaron = ?";
+
+        try (Connection connexion = getConnection();
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setLong(1, idFanfaron);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    groupeIds.add(rs.getLong("id_groupe"));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return groupeIds;
+        }
+        return groupeIds;
+    }
 }
