@@ -84,6 +84,8 @@ CREATE TABLE fanfaron_groupe (
 -- =========================
 CREATE TABLE evenement (
     id SERIAL PRIMARY KEY,
+    type_evenement VARCHAR(20) NOT NULL
+        CHECK (type_evenement IN ('atelier', 'repetition', 'prestation')),
     nom VARCHAR(100) NOT NULL,
     horodatage TIMESTAMP NOT NULL,
     duree INTEGER NOT NULL CHECK (duree > 0),
