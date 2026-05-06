@@ -31,9 +31,6 @@ public class EvenementServlet extends HttpServlet {
     private static final Set<String> STATUTS_VALIDES = new HashSet<>(
             Arrays.asList("present", "absent", "incertain"));
 
-    private static final Set<String> TYPES_VALIDES = new HashSet<>(
-            Arrays.asList("atelier", "repetition", "prestation"));
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
@@ -134,29 +131,21 @@ public class EvenementServlet extends HttpServlet {
             return;
         }
 
-        String typeEvenement = request.getParameter("typeEvenement");
         String nom = request.getParameter("nom");
         String horodatage = request.getParameter("horodatage");
         String dureeStr = request.getParameter("duree");
         String lieu = request.getParameter("lieu");
         String description = request.getParameter("description");
 
-        typeEvenement = typeEvenement == null ? "" : typeEvenement.trim();
         nom = nom == null ? "" : nom.trim();
         horodatage = horodatage == null ? "" : horodatage.trim();
         dureeStr = dureeStr == null ? "" : dureeStr.trim();
         lieu = lieu == null ? "" : lieu.trim();
         description = description == null ? "" : description.trim();
 
-        if (typeEvenement.isEmpty() || nom.isEmpty() || horodatage.isEmpty() || dureeStr.isEmpty()
+        if (nom.isEmpty() || horodatage.isEmpty() || dureeStr.isEmpty()
                 || lieu.isEmpty()) {
             request.setAttribute("erreur", "Tous les champs obligatoires doivent etre remplis.");
-            doGet(request, response);
-            return;
-        }
-
-        if (!TYPES_VALIDES.contains(typeEvenement)) {
-            request.setAttribute("erreur", "Type d'evenement invalide.");
             doGet(request, response);
             return;
         }
@@ -184,7 +173,7 @@ public class EvenementServlet extends HttpServlet {
             description = null;
         }
 
-        Evenement evenement = new Evenement(typeEvenement, nom, horodatageTs, duree, lieu, description);
+        Evenement evenement = new Evenement(nom, horodatageTs, duree, lieu, description);
         EvenementJDBCDAO dao = new EvenementJDBCDAO();
 
         if (dao.insertAvecOrganisateur(evenement, fanfaron.getId())) {

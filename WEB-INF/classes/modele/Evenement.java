@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 
 public class Evenement {
     private int id;
-    private String typeEvenement;
     private String nom;
     private Timestamp horodatage;
     private int duree;
@@ -14,9 +13,8 @@ public class Evenement {
     public Evenement() {
     }
 
-    public Evenement(String typeEvenement, String nom, Timestamp horodatage, int duree, String lieu,
+    public Evenement(String nom, Timestamp horodatage, int duree, String lieu,
             String description) {
-        this.typeEvenement = typeEvenement;
         this.nom = nom;
         this.horodatage = horodatage;
         this.duree = duree;
@@ -30,14 +28,6 @@ public class Evenement {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getTypeEvenement() {
-        return typeEvenement;
-    }
-
-    public void setTypeEvenement(String typeEvenement) {
-        this.typeEvenement = typeEvenement;
     }
 
     public String getNom() {

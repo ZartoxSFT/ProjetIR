@@ -265,12 +265,11 @@
                                                                                             value="add-evenement">
                                                                                         <div class="form-row">
                                                                                             <div class="form-group">
-                                                                                                <label
-                                                                                                    for="typeEvenement">Type
+                                                                                                <label for="nom">Nom
                                                                                                     *</label>
                                                                                                 <select
-                                                                                                    id="typeEvenement"
-                                                                                                    name="typeEvenement"
+                                                                                                    class="form-control"
+                                                                                                    id="nom" name="nom"
                                                                                                     required>
                                                                                                     <option value="">--
                                                                                                         Selectionner --
@@ -286,14 +285,6 @@
                                                                                                         value="prestation">
                                                                                                         Prestation
                                                                                                     </option>
-                                                                                                </select>
-                                                                                            </div>
-                                                                                            <div class="form-group">
-                                                                                                <label for="nom">Nom
-                                                                                                    *</label>
-                                                                                                <input type="text"
-                                                                                                    id="nom" name="nom"
-                                                                                                    required>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="form-row">
@@ -348,7 +339,6 @@
                                                                     <table>
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>Type</th>
                                                                                 <th>Nom</th>
                                                                                 <th>Date</th>
                                                                                 <th>Duree</th>
@@ -360,9 +350,6 @@
                                                                         <tbody>
                                                                             <% for (Evenement ev : evenements) { %>
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <%= ev.getTypeEvenement() %>
-                                                                                    </td>
                                                                                     <td>
                                                                                         <%= ev.getNom() %>
                                                                                     </td>
@@ -416,10 +403,9 @@
                                                                 <% } else { %>
                                                                     <p>
                                                                         <strong>Evenement :</strong>
-                                                                        <%= evenementSelectionne.getTypeEvenement() %> -
-                                                                            <%= evenementSelectionne.getNom() %>
-                                                                                (<%= evenementSelectionne.getHorodatage()
-                                                                                    %>)
+                                                                        <%= evenementSelectionne.getNom() %>
+                                                                            (<%= evenementSelectionne.getHorodatage() %>
+                                                                                )
                                                                     </p>
 
                                                                     <% if (instruments==null || instruments.isEmpty()) {
