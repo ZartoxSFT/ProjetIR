@@ -108,30 +108,59 @@ public class InstrumentDAO extends BaseDAO {
         return groupeIds;
     }
 
-    public void updateInstrumentsFanfaron(Long idFanfaron, String[] instruments) {
+    public boolean updateInstrumentsFanfaron(Long idFanfaron, String[] instruments) {
         String sqlDelete = "DELETE FROM fanfaron_instrument WHERE id_fanfaron = ?";
         String sqlInsert = "INSERT INTO fanfaron_instrument (id_fanfaron, id_instrument) VALUES (?, ?)";
 
         try (Connection connexion = getConnection();
-                PreparedStatement psDelete = connexion.prepareStatement(sqlDelete);
-                PreparedStatement psInsert = connexion.prepareStatement(sqlInsert)) {
+            PreparedStatement psDelete = connexion.prepareStatement(sqlDelete);
+            PreparedStatement psInsert = connexion.prepareStatement(sqlInsert)) {
 
-            // Supprimer les associations existantes
             psDelete.setLong(1, idFanfaron);
             psDelete.executeUpdate();
 
-            // Insérer les nouvelles associations
             if (instruments != null) {
                 for (String idInstrumentStr : instruments) {
-                    Long idInstrument = Long.parseLong(idInstrumentStr);
                     psInsert.setLong(1, idFanfaron);
-                    psInsert.setLong(2, idInstrument);
-                    psInsert.executeUpdate();
+                    psInsert.setLong(2, Long.parseLong(idInstrumentStr));
+                    psInsert.addBatch();
                 }
+
+                psInsert.executeBatch();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+    }
+
+    public boolean updateGroupesFanfaron(Long idFanfaron, String[] groupes) {
+        String sqlDelete = "DELETE FROM fanfaron_groupe WHERE id_fanfaron = ?";
+        String sqlInsert = "INSERT INTO fanfaron_groupe (id_fanfaron, id_groupe) VALUES (?, ?)";
+
+        try (Connection connexion = getConnection();
+            PreparedStatement psDelete = connexion.prepareStatement(sqlDelete);
+            PreparedStatement psInsert = connexion.prepareStatement(sqlInsert)) {
+
+            psDelete.setLong(1, idFanfaron);
+            psDelete.executeUpdate();
+
+            if (groupes != null) {
+                for (String idGroupeStr : groupes) {
+                    psInsert.setLong(1, idFanfaron);
+                    psInsert.setLong(2, Long.parseLong(idGroupeStr));
+                    psInsert.addBatch();
+                }
+
+                psInsert.executeBatch();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
