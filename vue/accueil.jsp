@@ -93,11 +93,12 @@
 
             <body>
                 <header>
-                    <h1>FanfareHub</h1>
+                    <h1><a href="accueil">FanfareHub</a></h1>
                     <nav>
                         <% if (fanfaron.getAdmin()) { %>
                             <a href="admin">Administration</a>
                             <% } %>
+                                <a href="mes-groupes">Mes Groupes</a>
                                 <a href="evenement">Evenements</a>
                                 <span>
                                     <%= fanfaron.getPrenom() %>

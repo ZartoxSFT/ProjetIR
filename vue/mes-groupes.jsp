@@ -3,8 +3,21 @@
 <%@ page import="java.util.List" %>
 <%@ page import="modele.Instrument" %>
 <%@ page import="modele.GroupeFanfare" %>
+<%@ page import="modele.Fanfaron" %>
 
 <%
+    Fanfaron fanfaron = (Fanfaron) request.getAttribute("fanfaron");
+    if (fanfaron == null) {
+            fanfaron = (Fanfaron) session.getAttribute("fanfaron");
+    }
+    if (fanfaron == null) {
+            fanfaron = (Fanfaron) session.getAttribute("utilisateur");
+    }
+    if (fanfaron == null) {
+            response.sendRedirect("connexion");
+            return;
+    }
+
     List<Instrument> instruments =
             (List<Instrument>) request.getAttribute("instruments");
 
@@ -23,6 +36,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FanfareHub - Mes groupes</title>
 
     <style>
@@ -47,13 +61,53 @@
             color: var(--text);
             background: linear-gradient(165deg, var(--bg-1), var(--bg-2));
             min-height: 100vh;
-            display: grid;
-            place-items: center;
-            padding: 24px;
+        }
+
+        header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1,
+        h2 {
+            color: var(--accent);
+        }
+
+        nav {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .logout {
+            background: var(--accent);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+        }
+
+        .admin-badge {
+            background: #388e3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
         .card {
-            width: min(700px, 100%);
+            width: min(700px, calc(100% - 48px));
+            margin: 32px auto;
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
@@ -61,23 +115,11 @@
             overflow: hidden;
         }
 
-        .header {
-            padding: 22px 24px;
-            border-bottom: 1px solid var(--border);
-            background: linear-gradient(120deg, #f6ecde, #fdfaf4);
-        }
-
-        .header h1 {
-            margin: 0;
-            color: var(--accent);
-        }
-
         .content {
             padding: 32px;
         }
 
         h2 {
-            color: var(--accent);
             margin-top: 0;
         }
 
@@ -119,18 +161,117 @@
         button:hover {
             background-color: var(--accent-strong);
         }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .success {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .admin-panel {
+            border-top: 1px solid var(--border);
+            margin-top: 32px;
+            padding-top: 28px;
+        }
+
+        .admin-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .admin-add-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .admin-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .admin-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .admin-edit-form,
+        .delete-form {
+            display: contents;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .admin-panel button {
+            width: auto;
+            white-space: nowrap;
+        }
+
+        .btn-delete {
+            background-color: #c62828;
+        }
+
+        .btn-delete:hover {
+            background-color: #a31818;
+        }
     </style>
 </head>
 
 <body>
 
+    <header>
+                    <h1><a href="accueil">FanfareHub</a></h1>
+                    <nav>
+                        <% if (fanfaron.getAdmin()) { %>
+                            <a href="admin">Administration</a>
+                            <% } %>
+                                <a href="mes-groupes">Mes Groupes</a>
+                                <a href="evenement">Evenements</a>
+                                <span>
+                                    <%= fanfaron.getPrenom() %>
+                                        <%= fanfaron.getNom() %>
+                                            <% if (fanfaron.getAdmin()) { %>
+                                                <span class="admin-badge">ADMIN</span>
+                                                <% } %>
+                                </span>
+                                <a href="deconnexion" class="logout">Déconnexion</a>
+                    </nav>
+                </header>
+
 <div class="card">
 
-    <div class="header">
-        <h1>🎺 FanfareHub</h1>
-    </div>
-
     <div class="content">
+
+        <% if ("1".equals(request.getParameter("success"))) { %>
+            <div class="message success">Vos choix ont été enregistrés.</div>
+        <% } else if ("admin".equals(request.getParameter("success"))) { %>
+            <div class="message success">Modification enregistrée.</div>
+        <% } else if ("admin".equals(request.getParameter("error"))) { %>
+            <div class="message error">Impossible d'effectuer cette modification.</div>
+        <% } else if ("forbidden".equals(request.getParameter("error"))) { %>
+            <div class="message error">Action réservée aux administrateurs.</div>
+        <% } %>
 
         <form method="POST"
               action="<%= request.getContextPath() %>/mes-groupes">
@@ -196,6 +337,72 @@
             </button>
 
         </form>
+
+        <% if (fanfaron.getAdmin()) { %>
+            <div class="admin-panel">
+                <h2>Administration des instruments et groupes</h2>
+
+                <div class="admin-grid">
+                    <section>
+                        <h3>Instruments</h3>
+
+                        <form class="admin-add-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
+                            <input type="hidden" name="action" value="addInstrument">
+                            <input type="text" name="nom" placeholder="Nouvel instrument" required>
+                            <button type="submit">Ajouter</button>
+                        </form>
+
+                        <div class="admin-list">
+                            <% for (Instrument instrument : instruments) { %>
+                                <div class="admin-row">
+                                    <form class="admin-edit-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
+                                        <input type="hidden" name="action" value="updateInstrument">
+                                        <input type="hidden" name="id" value="<%= instrument.getId() %>">
+                                        <input type="text" name="nom" value="<%= instrument.getNom() %>" required>
+                                        <button type="submit">Renommer</button>
+                                    </form>
+
+                                    <form class="delete-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
+                                        <input type="hidden" name="action" value="deleteInstrument">
+                                        <input type="hidden" name="id" value="<%= instrument.getId() %>">
+                                        <button class="btn-delete" type="submit">Supprimer</button>
+                                    </form>
+                                </div>
+                            <% } %>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>Groupes</h3>
+
+                        <form class="admin-add-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
+                            <input type="hidden" name="action" value="addGroupe">
+                            <input type="text" name="nom" placeholder="Nouveau groupe" required>
+                            <button type="submit">Ajouter</button>
+                        </form>
+
+                        <div class="admin-list">
+                            <% for (GroupeFanfare groupe : groupes) { %>
+                                <div class="admin-row">
+                                    <form class="admin-edit-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
+                                        <input type="hidden" name="action" value="updateGroupe">
+                                        <input type="hidden" name="id" value="<%= groupe.getId() %>">
+                                        <input type="text" name="nom" value="<%= groupe.getNom() %>" required>
+                                        <button type="submit">Renommer</button>
+                                    </form>
+
+                                    <form class="delete-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
+                                        <input type="hidden" name="action" value="deleteGroupe">
+                                        <input type="hidden" name="id" value="<%= groupe.getId() %>">
+                                        <button class="btn-delete" type="submit">Supprimer</button>
+                                    </form>
+                                </div>
+                            <% } %>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        <% } %>
 
     </div>
 

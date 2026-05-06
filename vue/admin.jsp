@@ -41,7 +41,6 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        box-shadow: 0 2px 8px rgba(31, 27, 22, 0.1);
                     }
 
                     h1 {
@@ -49,15 +48,37 @@
                         color: var(--accent);
                     }
 
-                    nav a {
+                    h1,
+                    h2 {
                         color: var(--accent);
-                        text-decoration: none;
-                        margin-left: 16px;
-                        font-weight: 500;
                     }
 
-                    nav a:hover {
-                        text-decoration: underline;
+                    nav {
+                        display: flex;
+                        gap: 16px;
+                        align-items: center;
+                    }
+
+                    a {
+                        color: var(--accent);
+                        text-decoration: none;
+                        font-weight: 600;
+                    }
+
+                    .logout {
+                        background: var(--accent);
+                        color: white;
+                        padding: 8px 14px;
+                        border-radius: 6px;
+                    }
+
+                    .admin-badge {
+                        background: var(--success);
+                        color: white;
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        font-weight: 700;
                     }
 
                     .container {
@@ -93,8 +114,7 @@
                         box-shadow: 0 10px 30px rgba(31, 27, 22, 0.15);
                     }
 
-                    h2 {
-                        color: var(--accent);
+                    .section h2 {
                         margin-top: 0;
                         border-bottom: 2px solid var(--border);
                         padding-bottom: 12px;
@@ -230,13 +250,25 @@
 
             <body>
                 <% Fanfaron utilisateur=(Fanfaron) session.getAttribute("utilisateur"); if (utilisateur==null ||
-                    !utilisateur.getAdmin()) { response.sendRedirect("connexion"); return; } %>
+                    !utilisateur.getAdmin()) { response.sendRedirect("connexion"); return; }
+                    Fanfaron fanfaron=utilisateur; %>
 
                     <header>
-                        <h1>🎺 FanfareHub - Administration</h1>
+                        <h1><a href="accueil">FanfareHub</a></h1>
                         <nav>
-                            <a href="accueil">Accueil</a>
-                            <a href="deconnexion">Déconnexion</a>
+                            <% if (fanfaron.getAdmin()) { %>
+                                <a href="admin">Administration</a>
+                                <% } %>
+                                    <a href="mes-groupes">Mes Groupes</a>
+                                    <a href="evenement">Evenements</a>
+                                    <span>
+                                        <%= fanfaron.getPrenom() %>
+                                            <%= fanfaron.getNom() %>
+                                                <% if (fanfaron.getAdmin()) { %>
+                                                    <span class="admin-badge">ADMIN</span>
+                                                    <% } %>
+                                    </span>
+                                    <a href="deconnexion" class="logout">Déconnexion</a>
                         </nav>
                     </header>
 

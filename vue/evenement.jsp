@@ -7,6 +7,7 @@
 
                         <% Fanfaron fanfaron=(Fanfaron) request.getAttribute("fanfaron"); if (fanfaron==null) {
                             fanfaron=(Fanfaron) session.getAttribute("fanfaron"); } if (fanfaron==null) {
+                            fanfaron=(Fanfaron) session.getAttribute("utilisateur"); } if (fanfaron==null) {
                             response.sendRedirect("connexion"); return; } List<Evenement> evenements = (List<Evenement>)
                                 request.getAttribute("evenements");
                                 Evenement evenementSelectionne = (Evenement)
@@ -70,11 +71,32 @@
                                                             color: var(--accent);
                                                         }
 
-                                                        nav a {
+                                                        nav {
+                                                            display: flex;
+                                                            gap: 16px;
+                                                            align-items: center;
+                                                        }
+
+                                                        a {
                                                             color: var(--accent);
                                                             text-decoration: none;
                                                             font-weight: 600;
-                                                            margin-left: 16px;
+                                                        }
+
+                                                        .logout {
+                                                            background: var(--accent);
+                                                            color: white;
+                                                            padding: 8px 14px;
+                                                            border-radius: 6px;
+                                                        }
+
+                                                        .admin-badge {
+                                                            background: var(--success);
+                                                            color: white;
+                                                            padding: 4px 8px;
+                                                            border-radius: 4px;
+                                                            font-size: 12px;
+                                                            font-weight: 700;
                                                         }
 
                                                         .container {
@@ -230,11 +252,21 @@
 
                                                 <body>
                                                     <header>
-                                                        <h1>FanfareHub</h1>
+                                                        <h1><a href="accueil">FanfareHub</a></h1>
                                                         <nav>
-                                                            <a href="accueil">Accueil</a>
-                                                            <a href="evenement">Evenements</a>
-                                                            <a href="deconnexion">Deconnexion</a>
+                                                            <% if (fanfaron.getAdmin()) { %>
+                                                                <a href="admin">Administration</a>
+                                                                <% } %>
+                                                                    <a href="mes-groupes">Mes Groupes</a>
+                                                                    <a href="evenement">Evenements</a>
+                                                                    <span>
+                                                                        <%= fanfaron.getPrenom() %>
+                                                                            <%= fanfaron.getNom() %>
+                                                                                <% if (fanfaron.getAdmin()) { %>
+                                                                                    <span class="admin-badge">ADMIN</span>
+                                                                                    <% } %>
+                                                                    </span>
+                                                                    <a href="deconnexion" class="logout">Déconnexion</a>
                                                         </nav>
                                                     </header>
 
