@@ -11,7 +11,7 @@ public class FanfaronDAO extends BaseDAO {
         String sql = "SELECT * FROM fanfaron WHERE id = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setInt(1, id);
 
@@ -25,7 +25,7 @@ public class FanfaronDAO extends BaseDAO {
         String sql = "SELECT * FROM fanfaron WHERE nom_fanfaron = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, nomFanfaron);
 
@@ -39,7 +39,7 @@ public class FanfaronDAO extends BaseDAO {
         String sql = "SELECT * FROM fanfaron WHERE email = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, email);
 
@@ -54,8 +54,8 @@ public class FanfaronDAO extends BaseDAO {
         List<Fanfaron> fanfarons = new ArrayList<>();
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = connexion.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 fanfarons.add(mapFanfaron(rs));
@@ -67,13 +67,13 @@ public class FanfaronDAO extends BaseDAO {
 
     public void create(Fanfaron fanfaron) throws SQLException {
         String sql = """
-            INSERT INTO fanfaron
-            (nom_fanfaron, email, mot_de_passe, prenom, nom, genre, contraintes_alimentaires, admin)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """;
+                    INSERT INTO fanfaron
+                    (nom_fanfaron, email, mot_de_passe, prenom, nom, genre, contraintes_alimentaires, admin)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """;
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement ps = connexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, fanfaron.getNomFanfaron());
             ps.setString(2, fanfaron.getEmail());
@@ -96,14 +96,14 @@ public class FanfaronDAO extends BaseDAO {
 
     public void update(Fanfaron fanfaron) throws SQLException {
         String sql = """
-            UPDATE fanfaron
-            SET nom_fanfaron = ?, email = ?, prenom = ?, nom = ?, genre = ?,
-                contraintes_alimentaires = ?, admin = ?
-            WHERE id = ?
-        """;
+                    UPDATE fanfaron
+                    SET nom_fanfaron = ?, email = ?, prenom = ?, nom = ?, genre = ?,
+                        contraintes_alimentaires = ?, admin = ?
+                    WHERE id = ?
+                """;
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, fanfaron.getNomFanfaron());
             ps.setString(2, fanfaron.getEmail());
@@ -122,7 +122,7 @@ public class FanfaronDAO extends BaseDAO {
         String sql = "DELETE FROM fanfaron WHERE id = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             ps.executeUpdate();
@@ -133,7 +133,7 @@ public class FanfaronDAO extends BaseDAO {
         String sql = "UPDATE fanfaron SET derniere_connexion = CURRENT_TIMESTAMP WHERE id = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setLong(1, id);
             ps.executeUpdate();
@@ -144,7 +144,7 @@ public class FanfaronDAO extends BaseDAO {
         String sql = "SELECT * FROM fanfaron WHERE nom_fanfaron = ? AND mot_de_passe = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, nomFanfaron);
             ps.setString(2, motDePasseHash);
@@ -159,7 +159,7 @@ public class FanfaronDAO extends BaseDAO {
         String sql = "SELECT 1 FROM fanfaron WHERE nom_fanfaron = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, nomFanfaron);
 
@@ -173,7 +173,7 @@ public class FanfaronDAO extends BaseDAO {
         String sql = "SELECT 1 FROM fanfaron WHERE email = ?";
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, email);
 
@@ -188,8 +188,8 @@ public class FanfaronDAO extends BaseDAO {
         List<Fanfaron> fanfarons = new ArrayList<>();
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = connexion.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 fanfarons.add(mapFanfaron(rs));
@@ -222,14 +222,14 @@ public class FanfaronDAO extends BaseDAO {
 
     public boolean updateFanfaron(Fanfaron fanfaron) {
         String sql = """
-            UPDATE fanfaron
-            SET prenom = ?, nom = ?, email = ?, genre = ?,
-                contraintes_alimentaires = ?, admin = ?
-            WHERE id = ?
-        """;
+                    UPDATE fanfaron
+                    SET prenom = ?, nom = ?, email = ?, genre = ?,
+                        contraintes_alimentaires = ?, admin = ?
+                    WHERE id = ?
+                """;
 
         try (Connection connexion = getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
 
             ps.setString(1, fanfaron.getPrenom());
             ps.setString(2, fanfaron.getNom());
@@ -250,6 +250,26 @@ public class FanfaronDAO extends BaseDAO {
         try {
             delete((int) id);
             return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isMemberOfCommissionPrestation(long idFanfaron) {
+        String sql = "SELECT 1 FROM fanfaron_groupe fg "
+                + "JOIN groupe_fanfare g ON g.id = fg.id_groupe "
+                + "WHERE fg.id_fanfaron = ? AND g.nom = ?";
+
+        try (Connection connexion = getConnection();
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setLong(1, idFanfaron);
+            ps.setString(2, "commission prestation");
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

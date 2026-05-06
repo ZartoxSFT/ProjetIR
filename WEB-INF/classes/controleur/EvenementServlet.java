@@ -18,8 +18,8 @@ import jakarta.servlet.http.HttpSession;
 
 import dao.EvenementInscriptionJDBCDAO;
 import dao.EvenementJDBCDAO;
-import dao.GroupeJDBCDAO;
-import dao.InstrumentJDBCDAO;
+import dao.FanfaronDAO;
+import dao.InstrumentDAO;
 import modele.InscriptionDetail;
 import modele.Instrument;
 import modele.Evenement;
@@ -46,8 +46,8 @@ public class EvenementServlet extends HttpServlet {
         Fanfaron fanfaron = (Fanfaron) session.getAttribute("fanfaron");
         request.setAttribute("fanfaron", fanfaron);
 
-        GroupeJDBCDAO groupeDao = new GroupeJDBCDAO();
-        boolean peutProposer = groupeDao.isMemberOfCommissionPrestation(fanfaron.getId());
+        FanfaronDAO fanfaronDao = new FanfaronDAO();
+        boolean peutProposer = fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
         request.setAttribute("peutProposer", peutProposer);
 
         EvenementJDBCDAO dao = new EvenementJDBCDAO();
@@ -76,8 +76,8 @@ public class EvenementServlet extends HttpServlet {
                     List<InscriptionDetail> inscriptions = inscriptionDao.getInscriptionsByEvenement(evenementId);
                     request.setAttribute("inscriptions", inscriptions);
 
-                    InstrumentJDBCDAO instrumentDao = new InstrumentJDBCDAO();
-                    List<Instrument> instruments = instrumentDao.getAllInstruments();
+                    InstrumentDAO instrumentDao = new InstrumentDAO();
+                    List<Instrument> instruments = instrumentDao.findAllInstruments();
                     request.setAttribute("instruments", instruments);
                 } else {
                     request.setAttribute("erreur", "Evenement introuvable.");
@@ -127,8 +127,8 @@ public class EvenementServlet extends HttpServlet {
 
     private void handleAjouterEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
-        GroupeJDBCDAO groupeDao = new GroupeJDBCDAO();
-        if (!groupeDao.isMemberOfCommissionPrestation(fanfaron.getId())) {
+        FanfaronDAO fanfaronDao = new FanfaronDAO();
+        if (!fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId())) {
             request.setAttribute("erreur", "Vous n'etes pas autorise a proposer un evenement.");
             doGet(request, response);
             return;
@@ -237,8 +237,8 @@ public class EvenementServlet extends HttpServlet {
 
     private void handleSupprimerEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
-        GroupeJDBCDAO groupeDao = new GroupeJDBCDAO();
-        if (!groupeDao.isMemberOfCommissionPrestation(fanfaron.getId())) {
+        FanfaronDAO fanfaronDao = new FanfaronDAO();
+        if (!fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId())) {
             request.setAttribute("erreur", "Vous n'etes pas autorise a supprimer un evenement.");
             doGet(request, response);
             return;
