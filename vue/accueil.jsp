@@ -1,9 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="modele.Fanfaron" %>
+    <%@ page import="java.text.SimpleDateFormat" %>
 
         <% Fanfaron fanfaron=(Fanfaron) request.getAttribute("fanfaron"); if (fanfaron==null) { fanfaron=(Fanfaron)
             session.getAttribute("fanfaron"); } if (fanfaron==null) { fanfaron=(Fanfaron)
             session.getAttribute("utilisateur"); } if (fanfaron==null) { response.sendRedirect("connexion"); return; }
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             %>
 
             <!DOCTYPE html>
@@ -139,7 +141,7 @@
                                 <%= fanfaron.getAdmin() ? "Oui" : "Non" %>
                             </p>
                             <p><strong>Membre depuis :</strong>
-                                <%= fanfaron.getDateCreation() %>
+                                <%= fanfaron.getDateCreation() == null ? "" : dateFormat.format(fanfaron.getDateCreation()) %>
                             </p>
                         </div>
                     </section>

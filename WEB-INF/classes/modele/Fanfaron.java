@@ -1,5 +1,6 @@
 package modele;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Fanfaron {
@@ -11,7 +12,7 @@ public class Fanfaron {
     private String motDePasseHash;
     private String genre;
     private String contraintesAlimentaires;
-    private Timestamp dateCreation;
+    private Date dateCreation;
     private Timestamp derniereConnexion;
     private boolean admin;
 
@@ -117,11 +118,11 @@ public class Fanfaron {
         this.admin = admin;
     }
 
-    public Timestamp getDateCreation() {
+    public Date getDateCreation() {
         return dateCreation;
     }
 
-    public void setDateCreation(Timestamp dateCreation) {
+    public void setDateCreation(Date dateCreation) {
         this.dateCreation = dateCreation;
     }
 

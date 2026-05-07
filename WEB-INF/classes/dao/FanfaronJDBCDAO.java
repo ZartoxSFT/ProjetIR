@@ -296,7 +296,7 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         fanfaron.setGenre(rs.getString("genre"));
         fanfaron.setContraintesAlimentaires(rs.getString("contraintes_alimentaires"));
         fanfaron.setAdmin(rs.getBoolean("admin"));
-        fanfaron.setDateCreation(rs.getTimestamp("date_creation"));
+        fanfaron.setDateCreation(rs.getDate("date_creation"));
         fanfaron.setDerniereConnexion(rs.getTimestamp("derniere_connexion"));
         return fanfaron;
     }

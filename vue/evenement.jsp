@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="java.util.List" %>
+        <%@ page import="java.text.SimpleDateFormat" %>
         <%@ page import="modele.Evenement" %>
             <%@ page import="modele.Fanfaron" %>
                 <%@ page import="modele.Instrument" %>
@@ -18,6 +19,7 @@
                                                 Boolean peutProposer = (Boolean) request.getAttribute("peutProposer");
                                                 boolean canPropose = peutProposer != null &&
                                                 peutProposer.booleanValue();
+                                                SimpleDateFormat dateHeureFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                                                 %>
 
                                                 <!DOCTYPE html>
@@ -386,7 +388,7 @@
                                                                                         <%= ev.getNom() %>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <%= ev.getHorodatage() %>
+                                                                                        <%= ev.getHorodatage() == null ? "" : dateHeureFormat.format(ev.getHorodatage()) %>
                                                                                     </td>
                                                                                     <td>
                                                                                         <%= ev.getDuree() %> min
@@ -436,7 +438,7 @@
                                                                     <p>
                                                                         <strong>Evenement :</strong>
                                                                         <%= evenementSelectionne.getNom() %>
-                                                                            (<%= evenementSelectionne.getHorodatage() %>
+                                                                            (<%= evenementSelectionne.getHorodatage() == null ? "" : dateHeureFormat.format(evenementSelectionne.getHorodatage()) %>
                                                                                 )
                                                                     </p>
 
