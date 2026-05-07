@@ -144,9 +144,12 @@
             <div class="content">
                 <h2 style="text-align: center; color: var(--accent); margin-top: 0;">Connexion</h2>
 
-                <% if (request.getAttribute("erreur") !=null) { %>
+                <% Object erreurConnexion = request.getAttribute("erreur") != null
+                        ? request.getAttribute("erreur")
+                        : request.getAttribute("error");
+                    if (erreurConnexion != null) { %>
                     <div class="error">
-                        <%= request.getAttribute("erreur") %>
+                        <%= erreurConnexion %>
                     </div>
                     <% } %>
 

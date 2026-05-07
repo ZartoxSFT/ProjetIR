@@ -271,6 +271,8 @@
             <div class="message error">Impossible d'effectuer cette modification.</div>
         <% } else if ("forbidden".equals(request.getParameter("error"))) { %>
             <div class="message error">Action réservée aux administrateurs.</div>
+        <% } else if (request.getAttribute("error") != null) { %>
+            <div class="message error"><%= request.getAttribute("error") %></div>
         <% } %>
 
         <form method="POST"
@@ -365,7 +367,8 @@
                                     <form class="delete-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
                                         <input type="hidden" name="action" value="deleteInstrument">
                                         <input type="hidden" name="id" value="<%= instrument.getId() %>">
-                                        <button class="btn-delete" type="submit">Supprimer</button>
+                                        <button class="btn-delete" type="submit"
+                                                onclick="return confirm('Supprimer cet instrument ?')">Supprimer</button>
                                     </form>
                                 </div>
                             <% } %>
@@ -394,7 +397,8 @@
                                     <form class="delete-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
                                         <input type="hidden" name="action" value="deleteGroupe">
                                         <input type="hidden" name="id" value="<%= groupe.getId() %>">
-                                        <button class="btn-delete" type="submit">Supprimer</button>
+                                        <button class="btn-delete" type="submit"
+                                                onclick="return confirm('Supprimer ce groupe ?')">Supprimer</button>
                                     </form>
                                 </div>
                             <% } %>

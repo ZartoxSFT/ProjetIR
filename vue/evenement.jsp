@@ -417,7 +417,8 @@
                                                                                                     value="<%= ev.getId() %>">
                                                                                                 <button
                                                                                                     class="btn-delete"
-                                                                                                    type="submit">Supprimer</button>
+                                                                                                    type="submit"
+                                                                                                    onclick="return confirm('Supprimer cet evenement et ses inscriptions ?')">Supprimer</button>
                                                                                             </form>
                                                                                             <% } %>
                                                                                     </td>
@@ -548,7 +549,8 @@
                                                                                                                         name="fanfaronId"
                                                                                                                         value="<%= detail.getIdFanfaron() %>">
                                                                                                                     <button class="btn-delete"
-                                                                                                                        type="submit">Annuler</button>
+                                                                                                                        type="submit"
+                                                                                                                        onclick="return confirm('Annuler cette inscription ?')">Annuler</button>
                                                                                                                 </form>
                                                                                                             <% } %>
                                                                                                         </td>
