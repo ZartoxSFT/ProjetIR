@@ -1,34 +1,17 @@
 package dao;
 
-import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import modele.InscriptionDetail;
 
-public class EvenementInscriptionJDBCDAO {
+public class EvenementInscriptionJDBCDAO extends BaseDAO implements EvenementInscriptionDAO {
 
-    private Connection getConnection() throws Exception {
-        Properties props = new Properties();
-
-        InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties");
-        if (input == null) {
-            throw new Exception("Fichier db.properties introuvable");
-        }
-
-        props.load(input);
-
-        Class.forName("org.postgresql.Driver");
-
-        return DriverManager.getConnection(
-                props.getProperty("db.url"),
-                props.getProperty("db.user"),
-                props.getProperty("db.password"));
+    public EvenementInscriptionJDBCDAO(DbConnectionManager dbManager) {
+        super(dbManager);
     }
 
     public boolean upsertInscription(long idFanfaron, int idEvenement, int idInstrument, String statut) {

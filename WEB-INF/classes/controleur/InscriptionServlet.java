@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.annotation.WebServlet;
+import dao.DAOFactory;
 import dao.FanfaronDAO;
 import modele.Fanfaron;
 import java.nio.charset.StandardCharsets;
@@ -90,7 +91,7 @@ public class InscriptionServlet extends HttpServlet {
             erreurs.put("motDePasseConfirm", "Les mots de passe ne correspondent pas.");
         }
 
-        FanfaronDAO dao = new FanfaronDAO();
+        FanfaronDAO dao = DAOFactory.getFanfaronDAO();
         try {
         if (dao.existsByNomFanfaron(nomFanfaron)) {
             erreurs.put("nomFanfaron", "Ce nom de fanfaron est déjà pris.");

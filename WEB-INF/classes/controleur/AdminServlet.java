@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.annotation.WebServlet;
+import dao.DAOFactory;
 import dao.FanfaronDAO;
 import modele.Fanfaron;
 import java.nio.charset.StandardCharsets;
@@ -31,7 +32,7 @@ public class AdminServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        FanfaronDAO dao = new FanfaronDAO();
+        FanfaronDAO dao = DAOFactory.getFanfaronDAO();
 
         if ("delete".equals(action)) {
             long id = Long.parseLong(request.getParameter("id"));
@@ -66,7 +67,7 @@ public class AdminServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        FanfaronDAO dao = new FanfaronDAO();
+        FanfaronDAO dao = DAOFactory.getFanfaronDAO();
 
         if ("add".equals(action)) {
             handleAddFanfaron(request, dao);

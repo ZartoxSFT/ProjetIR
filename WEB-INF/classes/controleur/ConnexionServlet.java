@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.annotation.WebServlet;
+import dao.DAOFactory;
 import dao.FanfaronDAO;
 import modele.Fanfaron;
 import java.nio.charset.StandardCharsets;
@@ -39,7 +40,7 @@ public class ConnexionServlet extends HttpServlet {
 
         String motDePasseHash = hashPassword(password);
 
-        FanfaronDAO dao = new FanfaronDAO();
+        FanfaronDAO dao = DAOFactory.getFanfaronDAO();
         Fanfaron fanfaron;
 
         try {

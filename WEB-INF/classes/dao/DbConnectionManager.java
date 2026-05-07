@@ -1,0 +1,47 @@
+package dao;
+
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
+
+public class DbConnectionManager {
+    private static DbConnectionManager instance;
+
+    private final String url;
+    private final String user;
+    private final String password;
+
+    private DbConnectionManager() {
+        try (InputStream input = getClass()
+                .getClassLoader()
+                .getResourceAsStream("db.properties")) {
+
+            if (input == null) {
+                throw new IllegalStateException("Fichier db.properties introuvable");
+            }
+
+            Properties props = new Properties();
+            props.load(input);
+            Class.forName("org.postgresql.Driver");
+
+            this.url = props.getProperty("db.url");
+            this.user = props.getProperty("db.user");
+            this.password = props.getProperty("db.password");
+        } catch (Exception e) {
+            throw new IllegalStateException("Impossible d'initialiser la connexion a la base", e);
+        }
+    }
+
+    public static synchronized DbConnectionManager getInstance() {
+        if (instance == null) {
+            instance = new DbConnectionManager();
+        }
+        return instance;
+    }
+
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(url, user, password);
+    }
+}

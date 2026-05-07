@@ -16,8 +16,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import dao.EvenementInscriptionJDBCDAO;
-import dao.EvenementJDBCDAO;
+import dao.DAOFactory;
+import dao.EvenementDAO;
+import dao.EvenementInscriptionDAO;
 import dao.FanfaronDAO;
 import dao.InstrumentDAO;
 import modele.InscriptionDetail;
@@ -43,11 +44,11 @@ public class EvenementServlet extends HttpServlet {
         Fanfaron fanfaron = (Fanfaron) session.getAttribute("fanfaron");
         request.setAttribute("fanfaron", fanfaron);
 
-        FanfaronDAO fanfaronDao = new FanfaronDAO();
+        FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
         boolean peutProposer = fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
         request.setAttribute("peutProposer", peutProposer);
 
-        EvenementJDBCDAO dao = new EvenementJDBCDAO();
+        EvenementDAO dao = DAOFactory.getEvenementDAO();
         List<Evenement> evenements = dao.getAllEvenements();
         request.setAttribute("evenements", evenements);
 
@@ -69,11 +70,11 @@ public class EvenementServlet extends HttpServlet {
                 if (evenementSelectionne != null) {
                     request.setAttribute("evenementSelectionne", evenementSelectionne);
 
-                    EvenementInscriptionJDBCDAO inscriptionDao = new EvenementInscriptionJDBCDAO();
+                    EvenementInscriptionDAO inscriptionDao = DAOFactory.getEvenementInscriptionDAO();
                     List<InscriptionDetail> inscriptions = inscriptionDao.getInscriptionsByEvenement(evenementId);
                     request.setAttribute("inscriptions", inscriptions);
 
-                    InstrumentDAO instrumentDao = new InstrumentDAO();
+                    InstrumentDAO instrumentDao = DAOFactory.getInstrumentDAO();
                     List<Instrument> instruments = instrumentDao.findAllInstruments();
                     request.setAttribute("instruments", instruments);
                 } else {
@@ -124,7 +125,7 @@ public class EvenementServlet extends HttpServlet {
 
     private void handleAjouterEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
-        FanfaronDAO fanfaronDao = new FanfaronDAO();
+        FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
         if (!fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId())) {
             request.setAttribute("erreur", "Vous n'etes pas autorise a proposer un evenement.");
             doGet(request, response);
@@ -174,7 +175,7 @@ public class EvenementServlet extends HttpServlet {
         }
 
         Evenement evenement = new Evenement(nom, horodatageTs, duree, lieu, description);
-        EvenementJDBCDAO dao = new EvenementJDBCDAO();
+        EvenementDAO dao = DAOFactory.getEvenementDAO();
 
         if (dao.insertAvecOrganisateur(evenement, fanfaron.getId())) {
             request.setAttribute("succes", "Evenement ajoute avec succes.");
@@ -213,7 +214,7 @@ public class EvenementServlet extends HttpServlet {
             return;
         }
 
-        EvenementInscriptionJDBCDAO inscriptionDao = new EvenementInscriptionJDBCDAO();
+        EvenementInscriptionDAO inscriptionDao = DAOFactory.getEvenementInscriptionDAO();
         if (inscriptionDao.upsertInscription(fanfaron.getId(), evenementId, instrumentId, statut)) {
             request.setAttribute("succes", "Inscription enregistree.");
         } else {
@@ -226,7 +227,7 @@ public class EvenementServlet extends HttpServlet {
 
     private void handleSupprimerEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
-        FanfaronDAO fanfaronDao = new FanfaronDAO();
+        FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
         if (!fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId())) {
             request.setAttribute("erreur", "Vous n'etes pas autorise a supprimer un evenement.");
             doGet(request, response);
@@ -243,7 +244,7 @@ public class EvenementServlet extends HttpServlet {
             return;
         }
 
-        EvenementJDBCDAO dao = new EvenementJDBCDAO();
+        EvenementDAO dao = DAOFactory.getEvenementDAO();
         if (dao.deleteEvenement(evenementId)) {
             request.setAttribute("succes", "Evenement supprime avec succes.");
         } else {

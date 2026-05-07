@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import dao.DAOFactory;
 import dao.InstrumentDAO;
 import modele.Fanfaron;
 import modele.Instrument;
@@ -30,7 +31,7 @@ public class MesGroupesServlet extends HttpServlet {
 
         Fanfaron fanfaron = (Fanfaron) session.getAttribute("fanfaron");
 
-        InstrumentDAO dao = new InstrumentDAO();
+        InstrumentDAO dao = DAOFactory.getInstrumentDAO();
 
         List<Instrument> instruments = dao.findAllInstruments();
         List<GroupeFanfare> groupes = dao.findAllGroupes();
@@ -66,7 +67,7 @@ public class MesGroupesServlet extends HttpServlet {
         String[] instrumentIds = request.getParameterValues("instruments");
         String[] groupeIds = request.getParameterValues("groupes");
 
-        InstrumentDAO dao = new InstrumentDAO();
+        InstrumentDAO dao = DAOFactory.getInstrumentDAO();
 
         if (action != null && !action.isBlank()) {
             if (!fanfaron.getAdmin()) {
