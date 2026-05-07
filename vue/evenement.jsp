@@ -501,6 +501,7 @@
                                                                                                     <th>Instrument</th>
                                                                                                     <th>Fanfaron</th>
                                                                                                     <th>Statut</th>
+                                                                                                    <th>Actions</th>
                                                                                                 </tr>
                                                                                             </thead>
                                                                                             <tbody>
@@ -531,6 +532,23 @@
                                                                                                                 <%= detail.getStatut()
                                                                                                                     %>
                                                                                                             </span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <% if (fanfaron.getAdmin() || detail.getIdFanfaron() == fanfaron.getId()) { %>
+                                                                                                                <form method="POST" action="evenement">
+                                                                                                                    <input type="hidden"
+                                                                                                                        name="action"
+                                                                                                                        value="delete-inscription">
+                                                                                                                    <input type="hidden"
+                                                                                                                        name="evenementId"
+                                                                                                                        value="<%= evenementSelectionne.getId() %>">
+                                                                                                                    <input type="hidden"
+                                                                                                                        name="fanfaronId"
+                                                                                                                        value="<%= detail.getIdFanfaron() %>">
+                                                                                                                    <button class="btn-delete"
+                                                                                                                        type="submit">Annuler</button>
+                                                                                                                </form>
+                                                                                                            <% } %>
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     <% } %>

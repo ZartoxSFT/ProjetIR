@@ -114,6 +114,11 @@ public class EvenementServlet extends HttpServlet {
             return;
         }
 
+        if ("delete-inscription".equals(action)) {
+            handleSupprimerInscription(request, response, fanfaron);
+            return;
+        }
+
         if ("delete-evenement".equals(action)) {
             handleSupprimerEvenement(request, response, fanfaron);
             return;
@@ -219,6 +224,40 @@ public class EvenementServlet extends HttpServlet {
             request.setAttribute("succes", "Inscription enregistree.");
         } else {
             request.setAttribute("erreur", "Erreur lors de l'inscription.");
+        }
+
+        request.setAttribute("evenementId", evenementId);
+        doGet(request, response);
+    }
+
+    private void handleSupprimerInscription(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
+            throws ServletException, IOException {
+        String evenementIdStr = request.getParameter("evenementId");
+        String fanfaronIdStr = request.getParameter("fanfaronId");
+
+        int evenementId;
+        long fanfaronId;
+        try {
+            evenementId = Integer.parseInt(evenementIdStr);
+            fanfaronId = Long.parseLong(fanfaronIdStr);
+        } catch (NumberFormatException ex) {
+            request.setAttribute("erreur", "Donnees d'annulation invalides.");
+            doGet(request, response);
+            return;
+        }
+
+        if (fanfaronId != fanfaron.getId() && !fanfaron.getAdmin()) {
+            request.setAttribute("erreur", "Vous n'etes pas autorise a annuler cette inscription.");
+            request.setAttribute("evenementId", evenementId);
+            doGet(request, response);
+            return;
+        }
+
+        EvenementInscriptionDAO inscriptionDao = DAOFactory.getEvenementInscriptionDAO();
+        if (inscriptionDao.deleteInscription(fanfaronId, evenementId)) {
+            request.setAttribute("succes", "Inscription annulee.");
+        } else {
+            request.setAttribute("erreur", "Erreur lors de l'annulation de l'inscription.");
         }
 
         request.setAttribute("evenementId", evenementId);

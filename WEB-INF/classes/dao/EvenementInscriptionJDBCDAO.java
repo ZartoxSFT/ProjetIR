@@ -41,6 +41,22 @@ public class EvenementInscriptionJDBCDAO implements EvenementInscriptionDAO {
         }
     }
 
+    public boolean deleteInscription(long idFanfaron, int idEvenement) {
+        String sql = "DELETE FROM inscription WHERE id_fanfaron = ? AND id_evenement = ?";
+
+        try (Connection connexion = getConnection();
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setLong(1, idFanfaron);
+            ps.setInt(2, idEvenement);
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public List<InscriptionDetail> getInscriptionsByEvenement(int idEvenement) {
         String sql = "SELECT f.id AS id_fanfaron, f.nom_fanfaron, f.prenom, f.nom, "
                 + "i.nom AS instrument, ins.statut "
