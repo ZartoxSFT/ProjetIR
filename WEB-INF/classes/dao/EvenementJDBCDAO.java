@@ -11,10 +11,15 @@ import java.util.List;
 import modele.Evenement;
 import modele.EvenementInscrit;
 
-public class EvenementJDBCDAO extends BaseDAO implements EvenementDAO {
+public class EvenementJDBCDAO implements EvenementDAO {
+    private final DbConnectionManager dbManager;
 
     public EvenementJDBCDAO(DbConnectionManager dbManager) {
-        super(dbManager);
+        this.dbManager = dbManager;
+    }
+
+    private Connection getConnection() throws SQLException {
+        return dbManager.getConnection();
     }
 
     public List<Evenement> getAllEvenements() {

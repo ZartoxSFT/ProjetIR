@@ -5,10 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import modele.Fanfaron;
 
-public class FanfaronJDBCDAO extends BaseDAO implements FanfaronDAO {
+public class FanfaronJDBCDAO implements FanfaronDAO {
+    private final DbConnectionManager dbManager;
 
     public FanfaronJDBCDAO(DbConnectionManager dbManager) {
-        super(dbManager);
+        this.dbManager = dbManager;
+    }
+
+    private Connection getConnection() throws SQLException {
+        return dbManager.getConnection();
     }
 
     public Fanfaron getById(int id) throws SQLException {

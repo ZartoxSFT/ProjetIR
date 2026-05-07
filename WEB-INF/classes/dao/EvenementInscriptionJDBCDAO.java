@@ -3,15 +3,21 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import modele.InscriptionDetail;
 
-public class EvenementInscriptionJDBCDAO extends BaseDAO implements EvenementInscriptionDAO {
+public class EvenementInscriptionJDBCDAO implements EvenementInscriptionDAO {
+    private final DbConnectionManager dbManager;
 
     public EvenementInscriptionJDBCDAO(DbConnectionManager dbManager) {
-        super(dbManager);
+        this.dbManager = dbManager;
+    }
+
+    private Connection getConnection() throws SQLException {
+        return dbManager.getConnection();
     }
 
     public boolean upsertInscription(long idFanfaron, int idEvenement, int idInstrument, String statut) {

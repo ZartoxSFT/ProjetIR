@@ -6,10 +6,15 @@ import java.util.List;
 import modele.Instrument;
 import modele.GroupeFanfare;
 
-public class InstrumentJDBCDAO extends BaseDAO implements InstrumentDAO {
+public class InstrumentJDBCDAO implements InstrumentDAO {
+    private final DbConnectionManager dbManager;
 
     public InstrumentJDBCDAO(DbConnectionManager dbManager) {
-        super(dbManager);
+        this.dbManager = dbManager;
+    }
+
+    private Connection getConnection() throws SQLException {
+        return dbManager.getConnection();
     }
 
     public boolean insertInstrument(Instrument instrument) {
