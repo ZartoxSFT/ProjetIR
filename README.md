@@ -255,7 +255,7 @@ Contenu :
 
 ```properties
 db.url=jdbc:postgresql://localhost:5432/fanfarehub
-db.user=postgres
+db.user=login
 db.password=motdepasse
 ```
 

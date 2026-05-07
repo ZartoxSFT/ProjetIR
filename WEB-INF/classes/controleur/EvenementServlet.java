@@ -75,7 +75,7 @@ public class EvenementServlet extends HttpServlet {
                     request.setAttribute("inscriptions", inscriptions);
 
                     InstrumentDAO instrumentDao = DAOFactory.getInstrumentDAO();
-                    List<Instrument> instruments = instrumentDao.findAllInstruments();
+                    List<Instrument> instruments = instrumentDao.findInstrumentsByFanfaron(fanfaron.getId());
                     request.setAttribute("instruments", instruments);
                 } else {
                     request.setAttribute("erreur", "Evenement introuvable.");
@@ -214,6 +214,22 @@ public class EvenementServlet extends HttpServlet {
 
         if (!STATUTS_VALIDES.contains(statut)) {
             request.setAttribute("erreur", "Statut invalide.");
+            request.setAttribute("evenementId", evenementId);
+            doGet(request, response);
+            return;
+        }
+
+        InstrumentDAO instrumentDao = DAOFactory.getInstrumentDAO();
+        boolean instrumentAutorise = false;
+        for (Instrument instrument : instrumentDao.findInstrumentsByFanfaron(fanfaron.getId())) {
+            if (instrument.getId() != null && instrument.getId().longValue() == instrumentId) {
+                instrumentAutorise = true;
+                break;
+            }
+        }
+
+        if (!instrumentAutorise) {
+            request.setAttribute("erreur", "Vous ne pouvez vous inscrire qu'avec un instrument que vous jouez.");
             request.setAttribute("evenementId", evenementId);
             doGet(request, response);
             return;
