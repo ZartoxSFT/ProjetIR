@@ -1,5 +1,18 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="java.util.Map" %>
+    <%!
+        private String h(Object value) {
+            if (value == null) {
+                return "";
+            }
+            return value.toString()
+                    .replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("\"", "&quot;")
+                    .replace("'", "&#39;");
+        }
+    %>
         <!DOCTYPE html>
         <html lang="fr">
 
@@ -170,13 +183,13 @@
                             if (request.getAttribute("success") != null) { %>
                             <div
                                 style="background:#e6ffed;border-left:4px solid #28a745;color:#155724;padding:12px;margin-bottom:20px;border-radius:4px;">
-                                <%= request.getAttribute("success") %>
+                                <%= h(request.getAttribute("success")) %>
                             </div>
                             <% } %>
                                 <% if (erreurs !=null && !erreurs.isEmpty()) { for (String erreur : erreurs.values()) {
                                     %>
                                     <div class="error">
-                                        <%= erreur %>
+                                        <%= h(erreur) %>
                                     </div>
                                     <% } } %>
 
@@ -185,11 +198,10 @@
                                                 <div class="form-group">
                                                     <label for="nomFanfaron">Nom d'utilisateur *</label>
                                                     <input type="text" id="nomFanfaron" name="nomFanfaron" required
-                                                        value="<%= request.getAttribute(" nomFanfaron") !=null ?
-                                                        request.getAttribute("nomFanfaron") : "" %>">
+                                                        value="<%= h(request.getAttribute("nomFanfaron")) %>">
                                                     <% if (erreurs !=null && erreurs.containsKey("nomFanfaron")) { %>
                                                         <div class="error-message">
-                                                            <%= erreurs.get("nomFanfaron") %>
+                                                            <%= h(erreurs.get("nomFanfaron")) %>
                                                         </div>
                                                         <% } %>
                                                 </div>
@@ -199,11 +211,10 @@
                                                 <div class="form-group">
                                                     <label for="email">Email *</label>
                                                     <input type="email" id="email" name="email" required
-                                                        value="<%= request.getAttribute(" email") !=null ?
-                                                        request.getAttribute("email") : "" %>">
+                                                        value="<%= h(request.getAttribute("email")) %>">
                                                     <% if (erreurs !=null && erreurs.containsKey("email")) { %>
                                                         <div class="error-message">
-                                                            <%= erreurs.get("email") %>
+                                                            <%= h(erreurs.get("email")) %>
                                                         </div>
                                                         <% } %>
                                                 </div>
@@ -215,7 +226,7 @@
                                                     <input type="email" id="emailConfirm" name="emailConfirm" required>
                                                     <% if (erreurs !=null && erreurs.containsKey("emailConfirm")) { %>
                                                         <div class="error-message">
-                                                            <%= erreurs.get("emailConfirm") %>
+                                                            <%= h(erreurs.get("emailConfirm")) %>
                                                         </div>
                                                         <% } %>
                                                 </div>
@@ -227,7 +238,7 @@
                                                     <input type="password" id="motDePasse" name="motDePasse" required>
                                                     <% if (erreurs !=null && erreurs.containsKey("motDePasse")) { %>
                                                         <div class="error-message">
-                                                            <%= erreurs.get("motDePasse") %>
+                                                            <%= h(erreurs.get("motDePasse")) %>
                                                         </div>
                                                         <% } %>
                                                 </div>
@@ -241,7 +252,7 @@
                                                     <% if (erreurs !=null && erreurs.containsKey("motDePasseConfirm")) {
                                                         %>
                                                         <div class="error-message">
-                                                            <%= erreurs.get("motDePasseConfirm") %>
+                                                            <%= h(erreurs.get("motDePasseConfirm")) %>
                                                         </div>
                                                         <% } %>
                                                 </div>
@@ -251,14 +262,12 @@
                                                 <div class="form-group">
                                                     <label for="prenom">Prénom *</label>
                                                     <input type="text" id="prenom" name="prenom" required
-                                                        value="<%= request.getAttribute(" prenom") !=null ?
-                                                        request.getAttribute("prenom") : "" %>">
+                                                        value="<%= h(request.getAttribute("prenom")) %>">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="nom">Nom *</label>
                                                     <input type="text" id="nom" name="nom" required
-                                                        value="<%= request.getAttribute(" nom") !=null ?
-                                                        request.getAttribute("nom") : "" %>">
+                                                        value="<%= h(request.getAttribute("nom")) %>">
                                                 </div>
                                             </div>
 

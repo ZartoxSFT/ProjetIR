@@ -8,8 +8,7 @@
     <display-name>ProjetIR</display-name>
     
     <welcome-file-list>
-        <welcome-file>connexion.html</welcome-file>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>connexion</welcome-file>
     </welcome-file-list>
     
 </web-app>

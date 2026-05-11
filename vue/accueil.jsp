@@ -1,11 +1,32 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="modele.Fanfaron" %>
+    <%@ page import="modele.Instrument" %>
+    <%@ page import="modele.GroupeFanfare" %>
+    <%@ page import="modele.EvenementInscrit" %>
+    <%@ page import="java.util.List" %>
     <%@ page import="java.text.SimpleDateFormat" %>
+    <%!
+        private String h(Object value) {
+            if (value == null) {
+                return "";
+            }
+            return value.toString()
+                    .replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("\"", "&quot;")
+                    .replace("'", "&#39;");
+        }
+    %>
 
         <% Fanfaron fanfaron=(Fanfaron) request.getAttribute("fanfaron"); if (fanfaron==null) { fanfaron=(Fanfaron)
             session.getAttribute("fanfaron"); } if (fanfaron==null) { fanfaron=(Fanfaron)
             session.getAttribute("utilisateur"); } if (fanfaron==null) { response.sendRedirect("connexion"); return; }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat dateHeureFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            List<Instrument> instrumentsJoues = (List<Instrument>) request.getAttribute("instrumentsJoues");
+            List<GroupeFanfare> groupes = (List<GroupeFanfare>) request.getAttribute("groupes");
+            List<EvenementInscrit> evenementsInscrits = (List<EvenementInscrit>) request.getAttribute("evenementsInscrits");
             %>
 
             <!DOCTYPE html>
@@ -90,6 +111,38 @@
                     .user-info p {
                         margin: 8px 0;
                     }
+
+                    .dashboard {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                        gap: 18px;
+                        margin-top: 22px;
+                    }
+
+                    .info-block {
+                        background: #faf7f2;
+                        border: 1px solid #d8c8b6;
+                        border-radius: 8px;
+                        padding: 18px;
+                    }
+
+                    .info-block h3 {
+                        margin-top: 0;
+                        color: #b1442f;
+                    }
+
+                    .info-block ul {
+                        margin: 0;
+                        padding-left: 18px;
+                    }
+
+                    .info-block li {
+                        margin: 8px 0;
+                    }
+
+                    .muted {
+                        color: #706257;
+                    }
                 </style>
             </head>
 
@@ -103,8 +156,8 @@
                                 <a href="mes-groupes">Mes Groupes</a>
                                 <a href="evenement">Evenements</a>
                                 <span>
-                                    <%= fanfaron.getPrenom() %>
-                                        <%= fanfaron.getNom() %>
+                                    <%= h(fanfaron.getPrenom()) %>
+                                        <%= h(fanfaron.getNom()) %>
                                             <% if (fanfaron.getAdmin()) { %>
                                                 <span class="admin-badge">ADMIN</span>
                                                 <% } %>
@@ -115,27 +168,27 @@
 
                 <main class="container">
                     <section class="card">
-                        <h2>Bienvenue <%= fanfaron.getPrenom() %> !</h2>
+                        <h2>Bienvenue <%= h(fanfaron.getPrenom()) %> !</h2>
                         <p>Vous êtes connecté à FanfareHub.</p>
 
                         <div class="user-info">
                             <p><strong>Nom de fanfaron :</strong>
-                                <%= fanfaron.getNomFanfaron() %>
+                                <%= h(fanfaron.getNomFanfaron()) %>
                             </p>
                             <p><strong>Email :</strong>
-                                <%= fanfaron.getEmail() %>
+                                <%= h(fanfaron.getEmail()) %>
                             </p>
                             <p><strong>Prénom :</strong>
-                                <%= fanfaron.getPrenom() %>
+                                <%= h(fanfaron.getPrenom()) %>
                             </p>
                             <p><strong>Nom :</strong>
-                                <%= fanfaron.getNom() %>
+                                <%= h(fanfaron.getNom()) %>
                             </p>
                             <p><strong>Genre :</strong>
-                                <%= fanfaron.getGenre() %>
+                                <%= h(fanfaron.getGenre()) %>
                             </p>
                             <p><strong>Contraintes alimentaires :</strong>
-                                <%= fanfaron.getContraintesAlimentaires() %>
+                                <%= h(fanfaron.getContraintesAlimentaires()) %>
                             </p>
                             <p><strong>Administrateur :</strong>
                                 <%= fanfaron.getAdmin() ? "Oui" : "Non" %>
@@ -143,6 +196,56 @@
                             <p><strong>Membre depuis :</strong>
                                 <%= fanfaron.getDateCreation() == null ? "" : dateFormat.format(fanfaron.getDateCreation()) %>
                             </p>
+                        </div>
+
+                        <div class="dashboard">
+                            <div class="info-block">
+                                <h3>Mes instruments</h3>
+                                <% if (instrumentsJoues == null || instrumentsJoues.isEmpty()) { %>
+                                    <p class="muted">Aucun instrument renseigné.</p>
+                                <% } else { %>
+                                    <ul>
+                                        <% for (Instrument instrument : instrumentsJoues) { %>
+                                            <li><%= h(instrument.getNom()) %></li>
+                                        <% } %>
+                                    </ul>
+                                <% } %>
+                            </div>
+
+                            <div class="info-block">
+                                <h3>Mes groupes</h3>
+                                <% if (groupes == null || groupes.isEmpty()) { %>
+                                    <p class="muted">Aucun groupe renseigné.</p>
+                                <% } else { %>
+                                    <ul>
+                                        <% for (GroupeFanfare groupe : groupes) { %>
+                                            <li><%= h(groupe.getNom()) %></li>
+                                        <% } %>
+                                    </ul>
+                                <% } %>
+                            </div>
+
+                            <div class="info-block">
+                                <h3>Mes événements</h3>
+                                <% if (evenementsInscrits == null || evenementsInscrits.isEmpty()) { %>
+                                    <p class="muted">Aucune inscription enregistrée.</p>
+                                <% } else { %>
+                                    <ul>
+                                        <% for (EvenementInscrit evenement : evenementsInscrits) { %>
+                                            <li>
+                                                <strong><%= h(evenement.getNom()) %></strong><br>
+                                                <span class="muted">
+                                                    <%= evenement.getHorodatage() == null ? "" : dateHeureFormat.format(evenement.getHorodatage()) %>
+                                                    <% if (evenement.getLieu() != null && !evenement.getLieu().isBlank()) { %>
+                                                        - <%= h(evenement.getLieu()) %>
+                                                    <% } %>
+                                                </span><br>
+                                                <span><%= h(evenement.getInstrument()) %> - <%= h(evenement.getStatut()) %></span>
+                                            </li>
+                                        <% } %>
+                                    </ul>
+                                <% } %>
+                            </div>
                         </div>
                     </section>
                 </main>

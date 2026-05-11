@@ -4,6 +4,19 @@
 <%@ page import="modele.Instrument" %>
 <%@ page import="modele.GroupeFanfare" %>
 <%@ page import="modele.Fanfaron" %>
+<%!
+    private String h(Object value) {
+        if (value == null) {
+            return "";
+        }
+        return value.toString()
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+%>
 
 <%
     Fanfaron fanfaron = (Fanfaron) request.getAttribute("fanfaron");
@@ -249,8 +262,8 @@
                                 <a href="mes-groupes">Mes Groupes</a>
                                 <a href="evenement">Evenements</a>
                                 <span>
-                                    <%= fanfaron.getPrenom() %>
-                                        <%= fanfaron.getNom() %>
+                                    <%= h(fanfaron.getPrenom()) %>
+                                        <%= h(fanfaron.getNom()) %>
                                             <% if (fanfaron.getAdmin()) { %>
                                                 <span class="admin-badge">ADMIN</span>
                                                 <% } %>
@@ -272,7 +285,7 @@
         <% } else if ("forbidden".equals(request.getParameter("error"))) { %>
             <div class="message error">Action réservée aux administrateurs.</div>
         <% } else if (request.getAttribute("error") != null) { %>
-            <div class="message error"><%= request.getAttribute("error") %></div>
+            <div class="message error"><%= h(request.getAttribute("error")) %></div>
         <% } %>
 
         <form method="POST"
@@ -297,7 +310,7 @@
                                             : "" %>
                             >
 
-                            <%= instrument.getNom() %>
+                            <%= h(instrument.getNom()) %>
 
                         </label>
 
@@ -325,7 +338,7 @@
                                             : "" %>
                             >
 
-                            <%= groupe.getNom() %>
+                            <%= h(groupe.getNom()) %>
 
                         </label>
 
@@ -360,7 +373,7 @@
                                     <form class="admin-edit-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
                                         <input type="hidden" name="action" value="updateInstrument">
                                         <input type="hidden" name="id" value="<%= instrument.getId() %>">
-                                        <input type="text" name="nom" value="<%= instrument.getNom() %>" required>
+                                        <input type="text" name="nom" value="<%= h(instrument.getNom()) %>" required>
                                         <button type="submit">Renommer</button>
                                     </form>
 
@@ -390,7 +403,7 @@
                                     <form class="admin-edit-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
                                         <input type="hidden" name="action" value="updateGroupe">
                                         <input type="hidden" name="id" value="<%= groupe.getId() %>">
-                                        <input type="text" name="nom" value="<%= groupe.getNom() %>" required>
+                                        <input type="text" name="nom" value="<%= h(groupe.getNom()) %>" required>
                                         <button type="submit">Renommer</button>
                                     </form>
 

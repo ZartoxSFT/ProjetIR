@@ -1,6 +1,19 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="modele.Fanfaron" %>
         <%@ page import="java.util.List" %>
+        <%!
+            private String h(Object value) {
+                if (value == null) {
+                    return "";
+                }
+                return value.toString()
+                        .replace("&", "&amp;")
+                        .replace("<", "&lt;")
+                        .replace(">", "&gt;")
+                        .replace("\"", "&quot;")
+                        .replace("'", "&#39;");
+            }
+        %>
             <!DOCTYPE html>
             <html lang="fr">
 
@@ -262,8 +275,8 @@
                                     <a href="mes-groupes">Mes Groupes</a>
                                     <a href="evenement">Evenements</a>
                                     <span>
-                                        <%= fanfaron.getPrenom() %>
-                                            <%= fanfaron.getNom() %>
+                                        <%= h(fanfaron.getPrenom()) %>
+                                            <%= h(fanfaron.getNom()) %>
                                                 <% if (fanfaron.getAdmin()) { %>
                                                     <span class="admin-badge">ADMIN</span>
                                                     <% } %>
@@ -275,13 +288,13 @@
                     <div class="container">
                         <% if (request.getAttribute("succes") !=null) { %>
                             <div class="success">
-                                <%= request.getAttribute("succes") %>
+                                <%= h(request.getAttribute("succes")) %>
                             </div>
                             <% } %>
 
                                 <% if (request.getAttribute("erreur") !=null) { %>
                                     <div class="error">
-                                        <%= request.getAttribute("erreur") %>
+                                        <%= h(request.getAttribute("erreur")) %>
                                     </div>
                                     <% } %>
 
@@ -362,25 +375,25 @@
                                                         <div class="form-group">
                                                             <label>Nom d'utilisateur</label>
                                                             <input type="text"
-                                                                value="<%= fanfaronEdit.getNomFanfaron() %>" disabled
+                                                                value="<%= h(fanfaronEdit.getNomFanfaron()) %>" disabled
                                                                 style="background:#f5f5f5;">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="emailEdit">Email</label>
                                                             <input type="email" id="emailEdit" name="email"
-                                                                value="<%= fanfaronEdit.getEmail() %>" required>
+                                                                value="<%= h(fanfaronEdit.getEmail()) %>" required>
                                                         </div>
                                                     </div>
                                                     <div class="form-row">
                                                         <div class="form-group">
                                                             <label for="prenomEdit">Prénom</label>
                                                             <input type="text" id="prenomEdit" name="prenom"
-                                                                value="<%= fanfaronEdit.getPrenom() %>" required>
+                                                                value="<%= h(fanfaronEdit.getPrenom()) %>" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="nomEdit">Nom</label>
                                                             <input type="text" id="nomEdit" name="nom"
-                                                                value="<%= fanfaronEdit.getNom() %>" required>
+                                                                value="<%= h(fanfaronEdit.getNom()) %>" required>
                                                         </div>
                                                     </div>
                                                     <div class="form-row">
@@ -460,16 +473,16 @@
                                                                     %>
                                                                     <tr>
                                                                         <td>
-                                                                            <%= fan.getNomFanfaron() %>
+                                                                            <%= h(fan.getNomFanfaron()) %>
                                                                         </td>
                                                                         <td>
-                                                                            <%= fan.getEmail() %>
+                                                                            <%= h(fan.getEmail()) %>
                                                                         </td>
                                                                         <td>
-                                                                            <%= fan.getPrenom() %>
+                                                                            <%= h(fan.getPrenom()) %>
                                                                         </td>
                                                                         <td>
-                                                                            <%= fan.getNom() %>
+                                                                            <%= h(fan.getNom()) %>
                                                                         </td>
                                                                         <td>
                                                                             <span class='role-badge <%= fan.getAdmin() ? "admin" : "user" %>'>

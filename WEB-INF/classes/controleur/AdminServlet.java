@@ -91,7 +91,7 @@ public class AdminServlet extends HttpServlet {
         String password = request.getParameter("motDePasse");
         String genre = request.getParameter("genre");
         String contraintes = request.getParameter("contraintesAlimentaires");
-        boolean isAdmin = request.getParameter("admin") != null;
+        boolean isAdmin = request.getParameter("isAdmin") != null;
 
         if (nomFanfaron == null || nomFanfaron.trim().isEmpty() ||
                 prenom == null || prenom.trim().isEmpty() ||

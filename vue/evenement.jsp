@@ -5,6 +5,19 @@
             <%@ page import="modele.Fanfaron" %>
                 <%@ page import="modele.Instrument" %>
                     <%@ page import="modele.InscriptionDetail" %>
+                    <%!
+                        private String h(Object value) {
+                            if (value == null) {
+                                return "";
+                            }
+                            return value.toString()
+                                    .replace("&", "&amp;")
+                                    .replace("<", "&lt;")
+                                    .replace(">", "&gt;")
+                                    .replace("\"", "&quot;")
+                                    .replace("'", "&#39;");
+                        }
+                    %>
 
                         <% Fanfaron fanfaron=(Fanfaron) request.getAttribute("fanfaron"); if (fanfaron==null) {
                             fanfaron=(Fanfaron) session.getAttribute("fanfaron"); } if (fanfaron==null) {
@@ -262,8 +275,8 @@
                                                                     <a href="mes-groupes">Mes Groupes</a>
                                                                     <a href="evenement">Evenements</a>
                                                                     <span>
-                                                                        <%= fanfaron.getPrenom() %>
-                                                                            <%= fanfaron.getNom() %>
+                                                                        <%= h(fanfaron.getPrenom()) %>
+                                                                            <%= h(fanfaron.getNom()) %>
                                                                                 <% if (fanfaron.getAdmin()) { %>
                                                                                     <span class="admin-badge">ADMIN</span>
                                                                                     <% } %>
@@ -278,12 +291,12 @@
 
                                                             <% if (request.getAttribute("succes") !=null) { %>
                                                                 <div class="success">
-                                                                    <%= request.getAttribute("succes") %>
+                                                                    <%= h(request.getAttribute("succes")) %>
                                                                 </div>
                                                                 <% } %>
                                                                     <% if (request.getAttribute("erreur") !=null) { %>
                                                                         <div class="error">
-                                                                            <%= request.getAttribute("erreur") %>
+                                                                            <%= h(request.getAttribute("erreur")) %>
                                                                         </div>
                                                                         <% } %>
 
@@ -385,7 +398,7 @@
                                                                             <% for (Evenement ev : evenements) { %>
                                                                                 <tr>
                                                                                     <td>
-                                                                                        <%= ev.getNom() %>
+                                                                                        <%= h(ev.getNom()) %>
                                                                                     </td>
                                                                                     <td>
                                                                                         <%= ev.getHorodatage() == null ? "" : dateHeureFormat.format(ev.getHorodatage()) %>
@@ -394,11 +407,11 @@
                                                                                         <%= ev.getDuree() %> min
                                                                                     </td>
                                                                                     <td>
-                                                                                        <%= ev.getLieu() %>
+                                                                                        <%= h(ev.getLieu()) %>
                                                                                     </td>
                                                                                     <td>
                                                                                         <%= ev.getDescription()==null
-                                                                                            ? "" : ev.getDescription()
+                                                                                            ? "" : h(ev.getDescription())
                                                                                             %>
                                                                                     </td>
                                                                                     <td>
@@ -438,7 +451,7 @@
                                                                 <% } else { %>
                                                                     <p>
                                                                         <strong>Evenement :</strong>
-                                                                        <%= evenementSelectionne.getNom() %>
+                                                                        <%= h(evenementSelectionne.getNom()) %>
                                                                             (<%= evenementSelectionne.getHorodatage() == null ? "" : dateHeureFormat.format(evenementSelectionne.getHorodatage()) %>
                                                                                 )
                                                                     </p>
@@ -468,7 +481,7 @@
                                                                                                 instruments) { %>
                                                                                                 <option
                                                                                                     value="<%= instrument.getId() %>">
-                                                                                                    <%= instrument.getNom()
+                                                                                                    <%= h(instrument.getNom())
                                                                                                         %>
                                                                                                 </option>
                                                                                                 <% } %>
@@ -514,25 +527,25 @@
                                                                                                     inscriptions) { %>
                                                                                                     <tr>
                                                                                                         <td>
-                                                                                                            <%= detail.getInstrument()
+                                                                                                            <%= h(detail.getInstrument())
                                                                                                                 %>
                                                                                                         </td>
                                                                                                         <td>
-                                                                                                            <%= detail.getPrenom()
+                                                                                                            <%= h(detail.getPrenom())
                                                                                                                 %>
-                                                                                                                <%= detail.getNom()
+                                                                                                                <%= h(detail.getNom())
                                                                                                                     %>
                                                                                                                     <span
                                                                                                                         class="muted">(@
-                                                                                                                        <%= detail.getNomFanfaron()
+                                                                                                                        <%= h(detail.getNomFanfaron())
                                                                                                                             %>
                                                                                                                             )
                                                                                                                     </span>
                                                                                                         </td>
                                                                                                         <td>
                                                                                                             <span
-                                                                                                                class="statut statut-<%= detail.getStatut() %>">
-                                                                                                                <%= detail.getStatut()
+                                                                                                                class="statut statut-<%= h(detail.getStatut()) %>">
+                                                                                                                <%= h(detail.getStatut())
                                                                                                                     %>
                                                                                                             </span>
                                                                                                         </td>
