@@ -26,13 +26,19 @@
                                 request.getAttribute("evenements");
                                 Evenement evenementSelectionne = (Evenement)
                                 request.getAttribute("evenementSelectionne");
+                                Evenement evenementAEditer = (Evenement)
+                                request.getAttribute("evenementAEditer");
                                 List<Instrument> instruments = (List<Instrument>) request.getAttribute("instruments");
                                         List<InscriptionDetail> inscriptions = (List<InscriptionDetail>)
                                                 request.getAttribute("inscriptions");
                                                 Boolean peutProposer = (Boolean) request.getAttribute("peutProposer");
                                                 boolean canPropose = peutProposer != null &&
                                                 peutProposer.booleanValue();
+                                                Boolean peutModifierEvenement = (Boolean) request.getAttribute("peutModifierEvenement");
+                                                boolean canEditEvenement = peutModifierEvenement != null &&
+                                                peutModifierEvenement.booleanValue();
                                                 SimpleDateFormat dateHeureFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                                                SimpleDateFormat dateFormulaireFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
                                                 %>
 
                                                 <!DOCTYPE html>
@@ -377,6 +383,53 @@
                                                                                     <% } %>
                                                         </section>
 
+                                                        <% if (canEditEvenement && evenementAEditer != null) { %>
+                                                            <section class="card">
+                                                                <h2>Modifier l'evenement</h2>
+                                                                <form method="POST" action="evenement">
+                                                                    <input type="hidden" name="action" value="update-evenement">
+                                                                    <input type="hidden" name="evenementId"
+                                                                        value="<%= evenementAEditer.getId() %>">
+                                                                    <div class="form-row">
+                                                                        <div class="form-group">
+                                                                            <label for="editNom">Nom *</label>
+                                                                            <select id="editNom" name="nom" required>
+                                                                                <option value="atelier" <%= "atelier".equals(evenementAEditer.getNom()) ? "selected" : "" %>>Atelier</option>
+                                                                                <option value="repetition" <%= "repetition".equals(evenementAEditer.getNom()) ? "selected" : "" %>>Repetition</option>
+                                                                                <option value="prestation" <%= "prestation".equals(evenementAEditer.getNom()) ? "selected" : "" %>>Prestation</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="editHorodatage">Horodatage *</label>
+                                                                            <input type="datetime-local" id="editHorodatage"
+                                                                                name="horodatage"
+                                                                                value="<%= evenementAEditer.getHorodatage() == null ? "" : dateFormulaireFormat.format(evenementAEditer.getHorodatage()) %>"
+                                                                                required>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group">
+                                                                            <label for="editDuree">Duree (minutes) *</label>
+                                                                            <input type="number" id="editDuree" name="duree"
+                                                                                min="1" value="<%= evenementAEditer.getDuree() %>" required>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="editLieu">Lieu *</label>
+                                                                            <input type="text" id="editLieu" name="lieu"
+                                                                                value="<%= h(evenementAEditer.getLieu()) %>" required>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row full">
+                                                                        <div class="form-group">
+                                                                            <label for="editDescription">Description</label>
+                                                                            <textarea id="editDescription" name="description"><%= h(evenementAEditer.getDescription()) %></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button type="submit">Enregistrer les modifications</button>
+                                                                </form>
+                                                            </section>
+                                                        <% } %>
+
                                                         <section class="card">
                                                             <h2>Evenements existants</h2>
 
@@ -419,6 +472,12 @@
                                                                                             href="evenement?evenementId=<%= ev.getId() %>">
                                                                                             Voir inscriptions
                                                                                         </a>
+                                                                                        <% if (canEditEvenement) { %>
+                                                                                            <a class="link-action"
+                                                                                                href="evenement?editionId=<%= ev.getId() %>">
+                                                                                                Modifier
+                                                                                            </a>
+                                                                                        <% } %>
                                                                                         <% if (canPropose) { %>
                                                                                             <form method="POST"
                                                                                                 action="evenement">

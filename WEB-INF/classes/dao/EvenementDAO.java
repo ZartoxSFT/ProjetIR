@@ -15,5 +15,7 @@ public interface EvenementDAO {
 
     Evenement getById(int id) throws SQLException;
 
+    boolean updateEvenement(Evenement evenement);
+
     boolean deleteEvenement(int id);
 }

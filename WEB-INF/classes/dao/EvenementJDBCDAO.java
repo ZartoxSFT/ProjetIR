@@ -136,6 +136,25 @@ public class EvenementJDBCDAO implements EvenementDAO {
         }
     }
 
+    public boolean updateEvenement(Evenement evenement) {
+        String sql = "UPDATE evenement SET nom = ?, horodatage = ?, duree = ?, lieu = ?, description = ? WHERE id = ?";
+
+        try (Connection connexion = getConnection();
+                PreparedStatement ps = connexion.prepareStatement(sql)) {
+
+            ps.setString(1, evenement.getNom());
+            ps.setTimestamp(2, evenement.getHorodatage());
+            ps.setInt(3, evenement.getDuree());
+            ps.setString(4, evenement.getLieu());
+            ps.setString(5, evenement.getDescription());
+            ps.setInt(6, evenement.getId());
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean deleteEvenement(int id) {
         String sql = "DELETE FROM evenement WHERE id = ?";
 

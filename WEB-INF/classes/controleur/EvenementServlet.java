@@ -47,6 +47,7 @@ public class EvenementServlet extends HttpServlet {
         FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
         boolean peutProposer = fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
         request.setAttribute("peutProposer", peutProposer);
+        request.setAttribute("peutModifierEvenement", fanfaron.getAdmin() || peutProposer);
 
         EvenementDAO dao = DAOFactory.getEvenementDAO();
         List<Evenement> evenements = dao.getAllEvenements();
@@ -85,6 +86,36 @@ public class EvenementServlet extends HttpServlet {
             }
         }
 
+        Integer editionId = (Integer) request.getAttribute("editionId");
+        if (editionId == null) {
+            String editionParam = request.getParameter("editionId");
+            if (editionParam != null && !editionParam.trim().isEmpty()) {
+                try {
+                    editionId = Integer.parseInt(editionParam.trim());
+                } catch (NumberFormatException ex) {
+                    request.setAttribute("erreur", "Identifiant d'evenement a modifier invalide.");
+                }
+            }
+        }
+
+        if (editionId != null) {
+            boolean peutModifier = fanfaron.getAdmin() || peutProposer;
+            if (!peutModifier) {
+                request.setAttribute("erreur", "Vous n'etes pas autorise a modifier un evenement.");
+            } else {
+                try {
+                    Evenement evenementAEditer = dao.getById(editionId);
+                    if (evenementAEditer != null) {
+                        request.setAttribute("evenementAEditer", evenementAEditer);
+                    } else {
+                        request.setAttribute("erreur", "Evenement a modifier introuvable.");
+                    }
+                } catch (Exception e) {
+                    request.setAttribute("erreur", "Erreur lors du chargement de l'evenement a modifier.");
+                }
+            }
+        }
+
         request.getRequestDispatcher("/vue/evenement.jsp").forward(request, response);
     }
 
@@ -116,6 +147,11 @@ public class EvenementServlet extends HttpServlet {
 
         if ("delete-inscription".equals(action)) {
             handleSupprimerInscription(request, response, fanfaron);
+            return;
+        }
+
+        if ("update-evenement".equals(action)) {
+            handleModifierEvenement(request, response, fanfaron);
             return;
         }
 
@@ -277,6 +313,85 @@ public class EvenementServlet extends HttpServlet {
         }
 
         request.setAttribute("evenementId", evenementId);
+        doGet(request, response);
+    }
+
+    private void handleModifierEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
+            throws ServletException, IOException {
+        FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
+        boolean peutModifier = fanfaron.getAdmin()
+                || fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
+        if (!peutModifier) {
+            request.setAttribute("erreur", "Vous n'etes pas autorise a modifier un evenement.");
+            doGet(request, response);
+            return;
+        }
+
+        String evenementIdStr = request.getParameter("evenementId");
+        String nom = request.getParameter("nom");
+        String horodatage = request.getParameter("horodatage");
+        String dureeStr = request.getParameter("duree");
+        String lieu = request.getParameter("lieu");
+        String description = request.getParameter("description");
+
+        int evenementId;
+        try {
+            evenementId = Integer.parseInt(evenementIdStr);
+        } catch (NumberFormatException ex) {
+            request.setAttribute("erreur", "Identifiant d'evenement invalide.");
+            doGet(request, response);
+            return;
+        }
+
+        nom = nom == null ? "" : nom.trim();
+        horodatage = horodatage == null ? "" : horodatage.trim();
+        dureeStr = dureeStr == null ? "" : dureeStr.trim();
+        lieu = lieu == null ? "" : lieu.trim();
+        description = description == null ? "" : description.trim();
+
+        if (nom.isEmpty() || horodatage.isEmpty() || dureeStr.isEmpty() || lieu.isEmpty()) {
+            request.setAttribute("erreur", "Tous les champs obligatoires doivent etre remplis.");
+            request.setAttribute("editionId", evenementId);
+            doGet(request, response);
+            return;
+        }
+
+        int duree;
+        try {
+            duree = Integer.parseInt(dureeStr);
+        } catch (NumberFormatException ex) {
+            request.setAttribute("erreur", "La duree doit etre un nombre entier.");
+            request.setAttribute("editionId", evenementId);
+            doGet(request, response);
+            return;
+        }
+
+        Timestamp horodatageTs;
+        try {
+            LocalDateTime dateTime = LocalDateTime.parse(horodatage);
+            horodatageTs = Timestamp.valueOf(dateTime);
+        } catch (DateTimeParseException ex) {
+            request.setAttribute("erreur", "Format de date/heure invalide.");
+            request.setAttribute("editionId", evenementId);
+            doGet(request, response);
+            return;
+        }
+
+        if (description.isEmpty()) {
+            description = null;
+        }
+
+        Evenement evenement = new Evenement(nom, horodatageTs, duree, lieu, description);
+        evenement.setId(evenementId);
+
+        EvenementDAO dao = DAOFactory.getEvenementDAO();
+        if (dao.updateEvenement(evenement)) {
+            request.setAttribute("succes", "Evenement modifie avec succes.");
+        } else {
+            request.setAttribute("erreur", "Erreur lors de la modification de l'evenement.");
+            request.setAttribute("editionId", evenementId);
+        }
+
         doGet(request, response);
     }
 
