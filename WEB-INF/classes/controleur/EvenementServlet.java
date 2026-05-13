@@ -45,9 +45,10 @@ public class EvenementServlet extends HttpServlet {
         request.setAttribute("fanfaron", fanfaron);
 
         FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
-        boolean peutProposer = fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
+        boolean peutProposer = fanfaron.getAdmin()
+                || fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
         request.setAttribute("peutProposer", peutProposer);
-        request.setAttribute("peutModifierEvenement", fanfaron.getAdmin() || peutProposer);
+        request.setAttribute("peutModifierEvenement", peutProposer);
 
         EvenementDAO dao = DAOFactory.getEvenementDAO();
         List<Evenement> evenements = dao.getAllEvenements();
@@ -167,7 +168,9 @@ public class EvenementServlet extends HttpServlet {
     private void handleAjouterEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
         FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
-        if (!fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId())) {
+        boolean peutProposer = fanfaron.getAdmin()
+                || fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
+        if (!peutProposer) {
             request.setAttribute("erreur", "Vous n'etes pas autorise a proposer un evenement.");
             doGet(request, response);
             return;
@@ -398,7 +401,9 @@ public class EvenementServlet extends HttpServlet {
     private void handleSupprimerEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
         FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
-        if (!fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId())) {
+        boolean peutSupprimer = fanfaron.getAdmin()
+                || fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
+        if (!peutSupprimer) {
             request.setAttribute("erreur", "Vous n'etes pas autorise a supprimer un evenement.");
             doGet(request, response);
             return;

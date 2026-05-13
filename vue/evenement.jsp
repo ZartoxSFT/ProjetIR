@@ -187,9 +187,16 @@
                                                             background-color: var(--accent-strong);
                                                         }
 
+                                                        .btn-secondary {
+                                                            background-color: #757575;
+                                                        }
+
+                                                        .btn-secondary:hover {
+                                                            background-color: #616161;
+                                                        }
+
                                                         .btn-delete {
                                                             background-color: var(--error);
-                                                            margin-top: 8px;
                                                         }
 
                                                         .btn-delete:hover {
@@ -211,6 +218,41 @@
                                                             text-align: left;
                                                             padding: 12px;
                                                             border-bottom: 1px solid var(--border);
+                                                        }
+
+                                                        .event-table {
+                                                            margin-top: 20px;
+                                                        }
+
+                                                        .event-table th {
+                                                            font-weight: 600;
+                                                            border-bottom: 2px solid var(--border);
+                                                        }
+
+                                                        .event-table tbody tr:hover {
+                                                            background-color: #faf7f2;
+                                                        }
+
+                                                        .event-table .description-cell {
+                                                            max-width: 260px;
+                                                        }
+
+                                                        .actions {
+                                                            display: flex;
+                                                            gap: 8px;
+                                                            align-items: center;
+                                                            flex-wrap: wrap;
+                                                        }
+
+                                                        .actions a,
+                                                        .actions form {
+                                                            display: inline;
+                                                            margin: 0;
+                                                        }
+
+                                                        .actions button {
+                                                            padding: 6px 12px;
+                                                            font-size: 12px;
                                                         }
 
                                                         .success {
@@ -436,7 +478,7 @@
                                                             <% if (evenements==null || evenements.isEmpty()) { %>
                                                                 <p>Aucun evenement pour le moment.</p>
                                                                 <% } else { %>
-                                                                    <table>
+                                                                    <table class="event-table">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>Nom</th>
@@ -462,37 +504,41 @@
                                                                                     <td>
                                                                                         <%= h(ev.getLieu()) %>
                                                                                     </td>
-                                                                                    <td>
+                                                                                    <td class="description-cell">
                                                                                         <%= ev.getDescription()==null
                                                                                             ? "" : h(ev.getDescription())
                                                                                             %>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <a class="link-action"
-                                                                                            href="evenement?evenementId=<%= ev.getId() %>">
-                                                                                            Voir inscriptions
-                                                                                        </a>
-                                                                                        <% if (canEditEvenement) { %>
-                                                                                            <a class="link-action"
-                                                                                                href="evenement?editionId=<%= ev.getId() %>">
-                                                                                                Modifier
+                                                                                        <div class="actions">
+                                                                                            <a
+                                                                                                href="evenement?evenementId=<%= ev.getId() %>">
+                                                                                                <button type="button"
+                                                                                                    class="btn-secondary">Voir inscriptions</button>
                                                                                             </a>
-                                                                                        <% } %>
-                                                                                        <% if (canPropose) { %>
-                                                                                            <form method="POST"
-                                                                                                action="evenement">
-                                                                                                <input type="hidden"
-                                                                                                    name="action"
-                                                                                                    value="delete-evenement">
-                                                                                                <input type="hidden"
-                                                                                                    name="evenementId"
-                                                                                                    value="<%= ev.getId() %>">
-                                                                                                <button
-                                                                                                    class="btn-delete"
-                                                                                                    type="submit"
-                                                                                                    onclick="return confirm('Supprimer cet evenement et ses inscriptions ?')">Supprimer</button>
-                                                                                            </form>
+                                                                                            <% if (canEditEvenement) { %>
+                                                                                                <a
+                                                                                                    href="evenement?editionId=<%= ev.getId() %>">
+                                                                                                    <button type="button"
+                                                                                                        class="btn-secondary">Modifier</button>
+                                                                                                </a>
                                                                                             <% } %>
+                                                                                            <% if (canPropose) { %>
+                                                                                                <form method="POST"
+                                                                                                    action="evenement">
+                                                                                                    <input type="hidden"
+                                                                                                        name="action"
+                                                                                                        value="delete-evenement">
+                                                                                                    <input type="hidden"
+                                                                                                        name="evenementId"
+                                                                                                        value="<%= ev.getId() %>">
+                                                                                                    <button
+                                                                                                        class="btn-delete"
+                                                                                                        type="submit"
+                                                                                                        onclick="return confirm('Supprimer cet evenement et ses inscriptions ?')">Supprimer</button>
+                                                                                                </form>
+                                                                                            <% } %>
+                                                                                        </div>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <% } %>
