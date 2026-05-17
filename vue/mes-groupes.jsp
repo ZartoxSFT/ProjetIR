@@ -1,10 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%--
+    VUE MES GROUPES - Instruments et groupes du fanfaron
+
+    Responsabilites :
+    - Afficher les instruments et groupes disponibles
+    - Cocher les choix deja associes au fanfaron
+    - Afficher les formulaires admin de gestion des references
+    - Echaper les valeurs dynamiques avant affichage HTML
+--%>
 <%@ page import="java.util.List" %>
 <%@ page import="modele.Instrument" %>
 <%@ page import="modele.GroupeFanfare" %>
 <%@ page import="modele.Fanfaron" %>
 <%!
+    // Helper d'echappement HTML pour securiser les donnees affichees
     private String h(Object value) {
         if (value == null) {
             return "";
@@ -19,6 +29,7 @@
 %>
 
 <%
+    // Recuperation du fanfaron connecte, avec plusieurs cles pour compatibilite entre servlets
     Fanfaron fanfaron = (Fanfaron) request.getAttribute("fanfaron");
     if (fanfaron == null) {
             fanfaron = (Fanfaron) session.getAttribute("fanfaron");
@@ -52,6 +63,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FanfareHub - Mes groupes</title>
 
+    <%-- Styles locaux de la page Mes groupes --%>
     <style>
         :root {
             --bg-1: #f7f4ee;
@@ -253,6 +265,7 @@
 
 <body>
 
+    <%-- Barre de navigation commune aux pages connectees --%>
     <header>
                     <h1><a href="accueil">FanfareHub</a></h1>
                     <nav>
@@ -276,6 +289,7 @@
 
     <div class="content">
 
+        <%-- Messages de retour apres sauvegarde ou action admin --%>
         <% if ("1".equals(request.getParameter("success"))) { %>
             <div class="message success">Vos choix ont été enregistrés.</div>
         <% } else if ("admin".equals(request.getParameter("success"))) { %>
@@ -291,6 +305,7 @@
         <form method="POST"
               action="<%= request.getContextPath() %>/mes-groupes">
 
+            <%-- Choix personnels : instruments joues --%>
             <div class="section">
                 <h2>Mes instruments</h2>
 
@@ -319,6 +334,7 @@
                 </div>
             </div>
 
+            <%-- Choix personnels : groupes d'appartenance --%>
             <div class="section">
                 <h2>Mes groupes</h2>
 
@@ -353,6 +369,7 @@
 
         </form>
 
+        <%-- Panneau reserve aux administrateurs pour maintenir les listes de reference --%>
         <% if (fanfaron.getAdmin()) { %>
             <div class="admin-panel">
                 <h2>Administration des instruments et groupes</h2>

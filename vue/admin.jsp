@@ -1,7 +1,17 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <%--
+        VUE ADMINISTRATION - Gestion des fanfarons
+
+        Responsabilites :
+        - Afficher la liste des fanfarons fournie par AdminServlet
+        - Afficher le formulaire d'ajout ou d'edition
+        - Envoyer les actions de creation, modification et suppression
+        - Echaper les valeurs dynamiques avant affichage HTML
+    --%>
     <%@ page import="modele.Fanfaron" %>
         <%@ page import="java.util.List" %>
         <%!
+            // Helper d'echappement HTML pour securiser les donnees affichees
             private String h(Object value) {
                 if (value == null) {
                     return "";
@@ -21,6 +31,7 @@
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>FanfareHub - Administration</title>
+                <%-- Styles locaux de la page d'administration --%>
                 <style>
                     :root {
                         --bg-1: #f7f4ee;

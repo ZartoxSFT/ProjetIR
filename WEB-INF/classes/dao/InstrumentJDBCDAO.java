@@ -6,17 +6,41 @@ import java.util.List;
 import modele.Instrument;
 import modele.GroupeFanfare;
 
+/**
+ * DAO JDBC - INSTRUMENTS ET GROUPES
+ *
+ * Responsabilites :
+ * - Gerer les instruments disponibles dans l'application
+ * - Gerer les groupes de fanfare
+ * - Lire et mettre a jour les associations entre fanfarons, instruments et groupes
+ *
+ * Tables utilisees :
+ * - instrument
+ * - groupe_fanfare
+ * - fanfaron_instrument
+ * - fanfaron_groupe
+ */
 public class InstrumentJDBCDAO implements InstrumentDAO {
+    // Gestionnaire centralise des connexions a la base de donnees
     private final DbConnectionManager dbManager;
 
+    /**
+     * Constructeur avec injection du gestionnaire de connexions.
+     */
     public InstrumentJDBCDAO(DbConnectionManager dbManager) {
         this.dbManager = dbManager;
     }
 
+    /**
+     * Ouvre une connexion via le gestionnaire partage.
+     */
     private Connection getConnection() throws SQLException {
         return dbManager.getConnection();
     }
 
+    /**
+     * Insere un nouvel instrument de reference.
+     */
     public boolean insertInstrument(Instrument instrument) {
         String sql = "INSERT INTO instrument (nom) VALUES (?)";
 
@@ -33,6 +57,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         }
     }
     
+    /**
+     * Recupere tous les instruments disponibles.
+     */
     public List<Instrument> findAllInstruments() {
         List<Instrument> instruments = new ArrayList<>();
         String sql = "SELECT id, nom FROM instrument";
@@ -54,6 +81,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         return instruments;
     }
 
+    /**
+     * Recupere tous les groupes de fanfare disponibles.
+     */
     public List<GroupeFanfare> findAllGroupes() {
         List<GroupeFanfare> groupes = new ArrayList<>();
         String sql = "SELECT id, nom FROM groupe_fanfare";
@@ -75,6 +105,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         return groupes;
     }
 
+    /**
+     * Recupere uniquement les IDs des instruments associes a un fanfaron.
+     */
     public List<Long> findInstrumentIdsByFanfaron(Long idFanfaron){
         List<Long> instrumentIds = new ArrayList<>();
         String sql = "SELECT id_instrument FROM fanfaron_instrument WHERE id_fanfaron = ?";
@@ -96,6 +129,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         return instrumentIds;
     }
 
+    /**
+     * Recupere uniquement les IDs des groupes associes a un fanfaron.
+     */
     public List<Long> findGroupeIdsByFanfaron(Long idFanfaron){
         List<Long> groupeIds = new ArrayList<>();
         String sql = "SELECT id_groupe FROM fanfaron_groupe WHERE id_fanfaron = ?";
@@ -117,6 +153,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         return groupeIds;
     }
 
+    /**
+     * Recupere les objets Instrument complets joues par un fanfaron.
+     */
     public List<Instrument> findInstrumentsByFanfaron(Long idFanfaron) {
         List<Instrument> instruments = new ArrayList<>();
         String sql = "SELECT i.id, i.nom "
@@ -142,6 +181,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         return instruments;
     }
 
+    /**
+     * Recupere les objets GroupeFanfare complets auxquels appartient un fanfaron.
+     */
     public List<GroupeFanfare> findGroupesByFanfaron(Long idFanfaron) {
         List<GroupeFanfare> groupes = new ArrayList<>();
         String sql = "SELECT g.id, g.nom "
@@ -167,6 +209,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         return groupes;
     }
 
+    /**
+     * Remplace la liste des instruments associes a un fanfaron.
+     */
     public boolean updateInstrumentsFanfaron(Long idFanfaron, String[] instruments) {
         String sqlDelete = "DELETE FROM fanfaron_instrument WHERE id_fanfaron = ?";
         String sqlInsert = "INSERT INTO fanfaron_instrument (id_fanfaron, id_instrument) VALUES (?, ?)";
@@ -178,6 +223,7 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
             psDelete.setLong(1, idFanfaron);
             psDelete.executeUpdate();
 
+            // Reconstitution complete des associations selectionnees dans le formulaire
             if (instruments != null) {
                 for (String idInstrumentStr : instruments) {
                     psInsert.setLong(1, idFanfaron);
@@ -195,6 +241,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         return true;
     }
 
+    /**
+     * Remplace la liste des groupes associes a un fanfaron.
+     */
     public boolean updateGroupesFanfaron(Long idFanfaron, String[] groupes) {
         String sqlDelete = "DELETE FROM fanfaron_groupe WHERE id_fanfaron = ?";
         String sqlInsert = "INSERT INTO fanfaron_groupe (id_fanfaron, id_groupe) VALUES (?, ?)";
@@ -206,6 +255,7 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
             psDelete.setLong(1, idFanfaron);
             psDelete.executeUpdate();
 
+            // Reconstitution complete des associations selectionnees dans le formulaire
             if (groupes != null) {
                 for (String idGroupeStr : groupes) {
                     psInsert.setLong(1, idFanfaron);
@@ -223,6 +273,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         return true;
     }
 
+    /**
+     * Supprime un instrument et ses associations avec les fanfarons.
+     */
     public boolean deleteInstrument(Long id) {
         String sqlDeleteAssociations = "DELETE FROM fanfaron_instrument WHERE id_instrument = ?";
         String sqlDeleteInstrument = "DELETE FROM instrument WHERE id = ?";
@@ -243,6 +296,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         }
     }
 
+    /**
+     * Renomme un instrument existant.
+     */
     public boolean updateInstrument(Instrument instrument) {
         String sql = "UPDATE instrument SET nom = ? WHERE id = ?";
 
@@ -260,6 +316,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         return true;
     }
 
+    /**
+     * Insere un nouveau groupe de fanfare.
+     */
     public boolean insertGroupe(GroupeFanfare groupe) {
         String sql = "INSERT INTO groupe_fanfare (nom) VALUES (?)";
 
@@ -275,6 +334,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         }
     }
 
+    /**
+     * Renomme un groupe de fanfare existant.
+     */
     public boolean updateGroupe(GroupeFanfare groupe) {
         String sql = "UPDATE groupe_fanfare SET nom = ? WHERE id = ?";
 
@@ -292,6 +354,9 @@ public class InstrumentJDBCDAO implements InstrumentDAO {
         }
     }
 
+    /**
+     * Supprime un groupe et ses associations avec les fanfarons.
+     */
     public boolean deleteGroupe(Long id) {
         String sqlDeleteAssociations = "DELETE FROM fanfaron_groupe WHERE id_groupe = ?";
         String sqlDeleteGroupe = "DELETE FROM groupe_fanfare WHERE id = ?";

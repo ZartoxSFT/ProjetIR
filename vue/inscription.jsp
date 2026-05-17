@@ -1,6 +1,16 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <%--
+        VUE INSCRIPTION - Creation d'un compte fanfaron
+
+        Responsabilites :
+        - Afficher le formulaire d'inscription
+        - Reafficher les valeurs saisies en cas d'erreur
+        - Afficher les erreurs de validation champ par champ
+        - Echaper les valeurs dynamiques avant affichage HTML
+    --%>
     <%@ page import="java.util.Map" %>
     <%!
+        // Helper d'echappement HTML pour securiser les valeurs reaffichees
         private String h(Object value) {
             if (value == null) {
                 return "";
@@ -20,6 +30,7 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>FanfareHub - Inscription</title>
+            <%-- Styles locaux de la page d'inscription --%>
             <style>
                 :root {
                     --bg-1: #f7f4ee;

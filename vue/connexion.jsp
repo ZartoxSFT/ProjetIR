@@ -1,5 +1,14 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--
+    VUE CONNEXION - Formulaire d'authentification
+
+    Responsabilites :
+    - Afficher le formulaire de connexion
+    - Afficher les messages d'erreur ou de succes transmis par la servlet
+    - Echaper les valeurs dynamiques avant affichage HTML
+--%>
 <%!
+    // Helper d'echappement HTML pour securiser les messages affiches
     private String h(Object value) {
         if (value == null) {
             return "";
@@ -19,6 +28,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>FanfareHub - Connexion</title>
+        <%-- Styles locaux de la page de connexion --%>
         <style>
             :root {
                 --bg-1: #f7f4ee;

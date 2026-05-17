@@ -1,4 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <%--
+        VUE EVENEMENTS - Liste, edition et inscriptions aux evenements
+
+        Responsabilites :
+        - Afficher les evenements disponibles
+        - Afficher les formulaires de creation et modification selon les droits
+        - Afficher le detail des inscriptions d'un evenement selectionne
+        - Permettre l'inscription ou l'annulation via EvenementServlet
+        - Echaper les valeurs dynamiques avant affichage HTML
+    --%>
     <%@ page import="java.util.List" %>
         <%@ page import="java.text.SimpleDateFormat" %>
         <%@ page import="modele.Evenement" %>
@@ -6,6 +16,7 @@
                 <%@ page import="modele.Instrument" %>
                     <%@ page import="modele.InscriptionDetail" %>
                     <%!
+                        // Helper d'echappement HTML pour securiser toutes les donnees dynamiques
                         private String h(Object value) {
                             if (value == null) {
                                 return "";
@@ -19,6 +30,7 @@
                         }
                     %>
 
+                        <%-- Recuperation du fanfaron connecte et des donnees preparees par la servlet --%>
                         <% Fanfaron fanfaron=(Fanfaron) request.getAttribute("fanfaron"); if (fanfaron==null) {
                             fanfaron=(Fanfaron) session.getAttribute("fanfaron"); } if (fanfaron==null) {
                             fanfaron=(Fanfaron) session.getAttribute("utilisateur"); } if (fanfaron==null) {
@@ -49,6 +61,7 @@
                                                     <meta name="viewport"
                                                         content="width=device-width, initial-scale=1.0">
                                                     <title>FanfareHub - Evenements</title>
+                                                    <%-- Styles locaux de la page Evenements --%>
                                                     <style>
                                                         :root {
                                                             --bg-1: #f7f4ee;
@@ -314,6 +327,7 @@
                                                 </head>
 
                                                 <body>
+                                                    <%-- Barre de navigation commune aux pages connectees --%>
                                                     <header>
                                                         <h1><a href="accueil">FanfareHub</a></h1>
                                                         <nav>
@@ -333,6 +347,7 @@
                                                         </nav>
                                                     </header>
 
+                                                    <%-- Contenu principal : messages, formulaires, liste et inscriptions --%>
                                                     <main class="container">
                                                         <section class="card">
                                                             <h2>Proposer un evenement</h2>
@@ -348,6 +363,7 @@
                                                                         </div>
                                                                         <% } %>
 
+                                                                            <%-- Formulaire de creation visible uniquement pour les utilisateurs autorises --%>
                                                                             <% if (!canPropose) { %>
                                                                                 <p class="muted">Seuls les membres de la
                                                                                     commission prestation peuvent
@@ -425,6 +441,7 @@
                                                                                     <% } %>
                                                         </section>
 
+                                                        <%-- Formulaire d'edition charge lorsqu'un evenement a modifier est selectionne --%>
                                                         <% if (canEditEvenement && evenementAEditer != null) { %>
                                                             <section class="card">
                                                                 <h2>Modifier l'evenement</h2>
@@ -472,6 +489,7 @@
                                                             </section>
                                                         <% } %>
 
+                                                        <%-- Tableau recapitulatif des evenements existants --%>
                                                         <section class="card">
                                                             <h2>Evenements existants</h2>
 
@@ -547,6 +565,7 @@
                                                                     <% } %>
                                                         </section>
 
+                                                        <%-- Detail des inscriptions pour l'evenement selectionne --%>
                                                         <section class="card">
                                                             <h2>Inscriptions</h2>
 

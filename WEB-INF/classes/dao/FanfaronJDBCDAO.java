@@ -5,17 +5,38 @@ import java.util.ArrayList;
 import java.util.List;
 import modele.Fanfaron;
 
+/**
+ * DAO JDBC - FANFARON
+ *
+ * Responsabilites :
+ * - Lire, creer, modifier et supprimer les fanfarons
+ * - Authentifier un fanfaron avec son nom d'utilisateur et son mot de passe hashe
+ * - Verifier les doublons pendant l'inscription
+ * - Determiner certains droits metier, comme l'appartenance a la commission prestation
+ *
+ * Table principale : fanfaron
+ */
 public class FanfaronJDBCDAO implements FanfaronDAO {
+    // Gestionnaire centralise des connexions a la base de donnees
     private final DbConnectionManager dbManager;
 
+    /**
+     * Constructeur avec injection du gestionnaire de connexions.
+     */
     public FanfaronJDBCDAO(DbConnectionManager dbManager) {
         this.dbManager = dbManager;
     }
 
+    /**
+     * Ouvre une connexion via le gestionnaire partage.
+     */
     private Connection getConnection() throws SQLException {
         return dbManager.getConnection();
     }
 
+    /**
+     * Recupere un fanfaron par son identifiant numerique.
+     */
     public Fanfaron getById(int id) throws SQLException {
         String sql = "SELECT * FROM fanfaron WHERE id = ?";
 
@@ -30,6 +51,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Recupere un fanfaron par son nom de fanfaron, utilise pour la connexion.
+     */
     public Fanfaron getByNomFanfaron(String nomFanfaron) throws SQLException {
         String sql = "SELECT * FROM fanfaron WHERE nom_fanfaron = ?";
 
@@ -44,6 +68,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Recupere un fanfaron par son email.
+     */
     public Fanfaron getByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM fanfaron WHERE email = ?";
 
@@ -58,6 +85,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Recupere tous les fanfarons tries par identifiant.
+     */
     public List<Fanfaron> getAll() throws SQLException {
         String sql = "SELECT * FROM fanfaron ORDER BY id";
         List<Fanfaron> fanfarons = new ArrayList<>();
@@ -74,6 +104,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         return fanfarons;
     }
 
+    /**
+     * Cree un fanfaron et renseigne son ID avec la cle generee par la base.
+     */
     public void create(Fanfaron fanfaron) throws SQLException {
         String sql = """
                     INSERT INTO fanfaron
@@ -95,6 +128,7 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
 
             ps.executeUpdate();
 
+            // Recuperation de l'ID auto-genere pour synchroniser l'objet Java
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
                     fanfaron.setId(keys.getLong(1));
@@ -103,6 +137,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Met a jour toutes les informations principales d'un fanfaron.
+     */
     public void update(Fanfaron fanfaron) throws SQLException {
         String sql = """
                     UPDATE fanfaron
@@ -127,6 +164,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Supprime un fanfaron par son identifiant.
+     */
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM fanfaron WHERE id = ?";
 
@@ -138,6 +178,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Met a jour le timestamp de derniere connexion.
+     */
     public void updateDerniereConnexion(Long id) throws SQLException {
         String sql = "UPDATE fanfaron SET derniere_connexion = CURRENT_TIMESTAMP WHERE id = ?";
 
@@ -149,6 +192,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Authentifie un fanfaron en comparant le nom et le mot de passe deja hashe.
+     */
     public Fanfaron authenticate(String nomFanfaron, String motDePasseHash) throws SQLException {
         String sql = "SELECT * FROM fanfaron WHERE nom_fanfaron = ? AND mot_de_passe = ?";
 
@@ -164,6 +210,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Verifie si un nom de fanfaron est deja utilise.
+     */
     public boolean existsByNomFanfaron(String nomFanfaron) throws SQLException {
         String sql = "SELECT 1 FROM fanfaron WHERE nom_fanfaron = ?";
 
@@ -178,6 +227,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Verifie si une adresse email est deja utilisee.
+     */
     public boolean existsByEmail(String email) throws SQLException {
         String sql = "SELECT 1 FROM fanfaron WHERE email = ?";
 
@@ -192,6 +244,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Recupere tous les fanfarons pour l'administration.
+     */
     public List<Fanfaron> getAllFanfarons() {
         String sql = "SELECT * FROM fanfaron ORDER BY nom_fanfaron";
         List<Fanfaron> fanfarons = new ArrayList<>();
@@ -210,6 +265,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         return fanfarons;
     }
 
+    /**
+     * Version sans exception controlee de la recherche par ID, pratique pour les servlets.
+     */
     public Fanfaron getFanfaronById(long id) {
         try {
             return getById((int) id);
@@ -219,6 +277,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Version booleenne de la creation, adaptee aux messages utilisateur des servlets.
+     */
     public boolean addFanfaron(Fanfaron fanfaron) {
         try {
             create(fanfaron);
@@ -229,6 +290,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Met a jour les champs administrables depuis la page admin.
+     */
     public boolean updateFanfaron(Fanfaron fanfaron) {
         String sql = """
                     UPDATE fanfaron
@@ -255,6 +319,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Version booleenne de la suppression, adaptee aux servlets.
+     */
     public boolean deleteFanfaron(long id) {
         try {
             delete((int) id);
@@ -265,6 +332,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Verifie si le fanfaron appartient au groupe "commission prestation".
+     */
     public boolean isMemberOfCommissionPrestation(long idFanfaron) {
         String sql = "SELECT 1 FROM fanfaron_groupe fg "
                 + "JOIN groupe_fanfare g ON g.id = fg.id_groupe "
@@ -285,6 +355,9 @@ public class FanfaronJDBCDAO implements FanfaronDAO {
         }
     }
 
+    /**
+     * Convertit la ligne courante du ResultSet en objet Fanfaron.
+     */
     private Fanfaron mapFanfaron(ResultSet rs) throws SQLException {
         Fanfaron fanfaron = new Fanfaron();
         fanfaron.setId(rs.getLong("id"));

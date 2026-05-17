@@ -1,3 +1,13 @@
+-- =========================================================
+-- SCRIPT SQL - Initialisation de la base ProjetIR
+--
+-- Role :
+-- - Reinitialiser les tables de l'application
+-- - Creer les tables metier et les tables d'association
+-- - Declarer les contraintes de cle primaire, cle etrangere et validation
+-- - Inserer les donnees de reference et de demonstration
+-- =========================================================
+
 -- =========================
 -- RESET
 -- =========================

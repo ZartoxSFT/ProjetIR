@@ -26,14 +26,36 @@ import modele.Instrument;
 import modele.Evenement;
 import modele.Fanfaron;
 
+/**
+ * SERVLET EVENEMENT - Gestion des evenements et des inscriptions
+ *
+ * Responsabilites :
+ * - Afficher la liste des evenements disponibles
+ * - Autoriser les membres habilites a creer, modifier ou supprimer un evenement
+ * - Permettre a un fanfaron de s'inscrire avec un instrument qu'il joue
+ * - Afficher les participants inscrits a un evenement selectionne
+ * - Gerer l'annulation d'une inscription
+ *
+ * Securite :
+ * - Verifie que l'utilisateur est connecte avant chaque action
+ * - Controle les droits admin ou commission prestation pour les actions sensibles
+ *
+ * URL de routage : /evenement
+ */
 @WebServlet("/evenement")
 public class EvenementServlet extends HttpServlet {
 
+    // Liste blanche des statuts acceptes pour eviter les valeurs incoherentes en base
     private static final Set<String> STATUTS_VALIDES = new HashSet<>(
             Arrays.asList("present", "absent", "incertain"));
 
+    /**
+     * Traitement des requetes GET
+     * Charge les evenements, les droits de l'utilisateur et les details demandes.
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Recuperation de la session existante pour verifier l'authentification
         HttpSession session = request.getSession(false);
 
         if (session == null || session.getAttribute("fanfaron") == null) {
@@ -44,6 +66,7 @@ public class EvenementServlet extends HttpServlet {
         Fanfaron fanfaron = (Fanfaron) session.getAttribute("fanfaron");
         request.setAttribute("fanfaron", fanfaron);
 
+        // Calcul des droits : admin ou membre de la commission prestation
         FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
         boolean peutProposer = fanfaron.getAdmin()
                 || fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
@@ -54,6 +77,7 @@ public class EvenementServlet extends HttpServlet {
         List<Evenement> evenements = dao.getAllEvenements();
         request.setAttribute("evenements", evenements);
 
+        // Lecture de l'evenement a afficher : attribut interne ou parametre URL
         Integer evenementId = (Integer) request.getAttribute("evenementId");
         if (evenementId == null) {
             String evenementParam = request.getParameter("evenementId");
@@ -66,6 +90,7 @@ public class EvenementServlet extends HttpServlet {
             }
         }
 
+        // Si un evenement est selectionne, charger ses details et ses inscriptions
         if (evenementId != null) {
             try {
                 Evenement evenementSelectionne = dao.getById(evenementId);
@@ -87,6 +112,7 @@ public class EvenementServlet extends HttpServlet {
             }
         }
 
+        // Lecture de l'evenement a modifier, separee de la selection d'affichage
         Integer editionId = (Integer) request.getAttribute("editionId");
         if (editionId == null) {
             String editionParam = request.getParameter("editionId");
@@ -99,6 +125,7 @@ public class EvenementServlet extends HttpServlet {
             }
         }
 
+        // Charge le formulaire d'edition seulement si l'utilisateur a le droit de modifier
         if (editionId != null) {
             boolean peutModifier = fanfaron.getAdmin() || peutProposer;
             if (!peutModifier) {
@@ -120,8 +147,13 @@ public class EvenementServlet extends HttpServlet {
         request.getRequestDispatcher("/vue/evenement.jsp").forward(request, response);
     }
 
+    /**
+     * Traitement des requetes POST
+     * Oriente chaque formulaire vers le bon traitement selon le parametre action.
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Toutes les actions POST necessitent un utilisateur connecte
         HttpSession session = request.getSession(false);
 
         if (session == null || session.getAttribute("fanfaron") == null) {
@@ -131,6 +163,7 @@ public class EvenementServlet extends HttpServlet {
 
         Fanfaron fanfaron = (Fanfaron) session.getAttribute("fanfaron");
 
+        // Action par defaut : ajout d'evenement, pour compatibilite avec le formulaire
         String action = request.getParameter("action");
         if (action == null || action.trim().isEmpty()) {
             action = "add-evenement";
@@ -165,8 +198,12 @@ public class EvenementServlet extends HttpServlet {
         doGet(request, response);
     }
 
+    /**
+     * Ajoute un evenement apres verification des droits et validation du formulaire.
+     */
     private void handleAjouterEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
+        // Seuls les admins et la commission prestation peuvent proposer un evenement
         FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
         boolean peutProposer = fanfaron.getAdmin()
                 || fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
@@ -182,6 +219,7 @@ public class EvenementServlet extends HttpServlet {
         String lieu = request.getParameter("lieu");
         String description = request.getParameter("description");
 
+        // Normalisation des champs texte pour simplifier les validations suivantes
         nom = nom == null ? "" : nom.trim();
         horodatage = horodatage == null ? "" : horodatage.trim();
         dureeStr = dureeStr == null ? "" : dureeStr.trim();
@@ -230,6 +268,9 @@ public class EvenementServlet extends HttpServlet {
         doGet(request, response);
     }
 
+    /**
+     * Inscrit ou met a jour l'inscription du fanfaron pour un evenement.
+     */
     private void handleInscriptionEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
         String evenementIdStr = request.getParameter("evenementId");
@@ -251,6 +292,7 @@ public class EvenementServlet extends HttpServlet {
             return;
         }
 
+        // Validation du statut pour rester coherent avec les valeurs attendues
         if (!STATUTS_VALIDES.contains(statut)) {
             request.setAttribute("erreur", "Statut invalide.");
             request.setAttribute("evenementId", evenementId);
@@ -260,6 +302,7 @@ public class EvenementServlet extends HttpServlet {
 
         InstrumentDAO instrumentDao = DAOFactory.getInstrumentDAO();
         boolean instrumentAutorise = false;
+        // Verification metier : un fanfaron ne peut s'inscrire qu'avec un instrument lie a son profil
         for (Instrument instrument : instrumentDao.findInstrumentsByFanfaron(fanfaron.getId())) {
             if (instrument.getId() != null && instrument.getId().longValue() == instrumentId) {
                 instrumentAutorise = true;
@@ -285,11 +328,16 @@ public class EvenementServlet extends HttpServlet {
         doGet(request, response);
     }
 
+    /**
+     * Supprime une inscription existante.
+     * Un administrateur peut annuler pour tous, un fanfaron seulement pour lui-meme.
+     */
     private void handleSupprimerInscription(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
         String evenementIdStr = request.getParameter("evenementId");
         String fanfaronIdStr = request.getParameter("fanfaronId");
 
+        // Les identifiants arrivent sous forme de chaine depuis le formulaire
         int evenementId;
         long fanfaronId;
         try {
@@ -301,6 +349,7 @@ public class EvenementServlet extends HttpServlet {
             return;
         }
 
+        // Controle d'autorisation avant suppression
         if (fanfaronId != fanfaron.getId() && !fanfaron.getAdmin()) {
             request.setAttribute("erreur", "Vous n'etes pas autorise a annuler cette inscription.");
             request.setAttribute("evenementId", evenementId);
@@ -319,8 +368,12 @@ public class EvenementServlet extends HttpServlet {
         doGet(request, response);
     }
 
+    /**
+     * Modifie les informations d'un evenement existant.
+     */
     private void handleModifierEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
+        // Droits identiques a la creation : admin ou commission prestation
         FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
         boolean peutModifier = fanfaron.getAdmin()
                 || fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());
@@ -330,6 +383,7 @@ public class EvenementServlet extends HttpServlet {
             return;
         }
 
+        // Recuperation et validation des champs du formulaire d'edition
         String evenementIdStr = request.getParameter("evenementId");
         String nom = request.getParameter("nom");
         String horodatage = request.getParameter("horodatage");
@@ -359,6 +413,7 @@ public class EvenementServlet extends HttpServlet {
             return;
         }
 
+        // Conversion de la duree saisie en entier
         int duree;
         try {
             duree = Integer.parseInt(dureeStr);
@@ -369,6 +424,7 @@ public class EvenementServlet extends HttpServlet {
             return;
         }
 
+        // Conversion du champ datetime-local HTML vers un Timestamp SQL
         Timestamp horodatageTs;
         try {
             LocalDateTime dateTime = LocalDateTime.parse(horodatage);
@@ -384,6 +440,8 @@ public class EvenementServlet extends HttpServlet {
             description = null;
         }
 
+        // Creation du modele puis delegation de l'insertion au DAO
+        // L'objet modele porte l'ID pour que le DAO fasse un UPDATE et non un INSERT
         Evenement evenement = new Evenement(nom, horodatageTs, duree, lieu, description);
         evenement.setId(evenementId);
 
@@ -398,8 +456,12 @@ public class EvenementServlet extends HttpServlet {
         doGet(request, response);
     }
 
+    /**
+     * Supprime un evenement et laisse la base supprimer les inscriptions liees via les contraintes.
+     */
     private void handleSupprimerEvenement(HttpServletRequest request, HttpServletResponse response, Fanfaron fanfaron)
             throws ServletException, IOException {
+        // Suppression reservee aux administrateurs ou a la commission prestation
         FanfaronDAO fanfaronDao = DAOFactory.getFanfaronDAO();
         boolean peutSupprimer = fanfaron.getAdmin()
                 || fanfaronDao.isMemberOfCommissionPrestation(fanfaron.getId());

@@ -1,4 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <%--
+        VUE ACCUEIL - Tableau de bord du fanfaron connecte
+
+        Responsabilites :
+        - Recuperer le fanfaron depuis la requete ou la session
+        - Afficher ses informations personnelles
+        - Afficher ses instruments, groupes et evenements inscrits
+        - Echaper les valeurs dynamiques avant affichage HTML
+    --%>
     <%@ page import="modele.Fanfaron" %>
     <%@ page import="modele.Instrument" %>
     <%@ page import="modele.GroupeFanfare" %>
@@ -6,6 +15,7 @@
     <%@ page import="java.util.List" %>
     <%@ page import="java.text.SimpleDateFormat" %>
     <%!
+        // Helper d'echappement HTML pour eviter l'injection de contenu dans la page
         private String h(Object value) {
             if (value == null) {
                 return "";
@@ -19,6 +29,7 @@
         }
     %>
 
+        <%-- Recuperation du fanfaron connecte, avec plusieurs cles pour compatibilite entre servlets --%>
         <% Fanfaron fanfaron=(Fanfaron) request.getAttribute("fanfaron"); if (fanfaron==null) { fanfaron=(Fanfaron)
             session.getAttribute("fanfaron"); } if (fanfaron==null) { fanfaron=(Fanfaron)
             session.getAttribute("utilisateur"); } if (fanfaron==null) { response.sendRedirect("connexion"); return; }
@@ -36,6 +47,7 @@
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>FanfareHub - Accueil</title>
+                <%-- Styles locaux de la page d'accueil --%>
                 <style>
                     body {
                         margin: 0;
@@ -147,6 +159,7 @@
             </head>
 
             <body>
+                <%-- Barre de navigation commune aux pages connectees --%>
                 <header>
                     <h1><a href="accueil">FanfareHub</a></h1>
                     <nav>
@@ -166,6 +179,7 @@
                     </nav>
                 </header>
 
+                <%-- Contenu principal : informations du fanfaron et resume de ses activites --%>
                 <main class="container">
                     <section class="card">
                         <h2>Bienvenue <%= h(fanfaron.getPrenom()) %> !</h2>
