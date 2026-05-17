@@ -27,7 +27,7 @@ public class AdminServlet extends HttpServlet {
         Fanfaron utilisateur = (Fanfaron) session.getAttribute("utilisateur");
 
         if (utilisateur == null || !utilisateur.getAdmin()) {
-            response.sendRedirect(request.getContextPath() + "/connexion");
+            response.sendRedirect(request.getContextPath() + "/accueil");
             return;
         }
 
