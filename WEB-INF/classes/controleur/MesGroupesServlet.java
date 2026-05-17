@@ -23,7 +23,6 @@ import modele.GroupeFanfare;
  * - Afficher les instruments et groupes disponibles
  * - Recuperer les choix deja associes au fanfaron connecte
  * - Enregistrer les instruments joues et les groupes d'appartenance
- * - Permettre aux administrateurs de gerer les listes de reference
  *
  * URL de routage : /mes-groupes
  */
@@ -72,7 +71,7 @@ public class MesGroupesServlet extends HttpServlet {
 
     /**
      * Traitement des requetes POST
-     * Enregistre les choix personnels ou delegue une action d'administration.
+     * Enregistre les choix personnels.
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -88,22 +87,15 @@ public class MesGroupesServlet extends HttpServlet {
         Fanfaron fanfaron = (Fanfaron) session.getAttribute("fanfaron");
 
         String action = request.getParameter("action");
+        if (action != null && !action.isBlank()) {
+            response.sendRedirect(request.getContextPath() + "/admin");
+            return;
+        }
+
         String[] instrumentIds = request.getParameterValues("instruments");
         String[] groupeIds = request.getParameterValues("groupes");
 
         InstrumentDAO dao = DAOFactory.getInstrumentDAO();
-
-        // Si une action est fournie, il s'agit du panneau admin (ajout/edition/suppression)
-        if (action != null && !action.isBlank()) {
-            if (!fanfaron.getAdmin()) {
-                response.sendRedirect(request.getContextPath() + "/mes-groupes?error=forbidden");
-                return;
-            }
-
-            boolean success = handleAdminAction(request, dao, action);
-            response.sendRedirect(request.getContextPath() + "/mes-groupes?" + (success ? "success=admin" : "error=admin"));
-            return;
-        }
 
         // Mise a jour complete : suppression des anciennes associations puis insertion des nouvelles
         boolean success = dao.updateInstrumentsFanfaron(fanfaron.getId(), instrumentIds);
@@ -115,50 +107,5 @@ public class MesGroupesServlet extends HttpServlet {
             request.setAttribute("error", "Une erreur est survenue lors de la mise a jour de vos groupes et instruments. Reessayez plus tard.");
             doGet(request, response);
         }
-    }
-
-    /**
-     * Execute les actions reservees aux administrateurs sur les instruments et groupes.
-     *
-     * @return true si l'action a reussi, false en cas de validation ou d'erreur SQL
-     */
-    private boolean handleAdminAction(HttpServletRequest request, InstrumentDAO dao, String action) {
-        try {
-            // Les formulaires admin partagent les memes champs : nom pour le libelle, id pour l'edition/suppression
-            String nom = request.getParameter("nom");
-            String idParam = request.getParameter("id");
-
-            if ("addInstrument".equals(action)) {
-                return nom != null && !nom.trim().isEmpty()
-                        && dao.insertInstrument(new Instrument(null, nom.trim()));
-            }
-
-            if ("updateInstrument".equals(action)) {
-                return nom != null && !nom.trim().isEmpty() && idParam != null
-                        && dao.updateInstrument(new Instrument(Long.parseLong(idParam), nom.trim()));
-            }
-
-            if ("deleteInstrument".equals(action)) {
-                return idParam != null && dao.deleteInstrument(Long.parseLong(idParam));
-            }
-
-            if ("addGroupe".equals(action)) {
-                return nom != null && !nom.trim().isEmpty()
-                        && dao.insertGroupe(new GroupeFanfare(null, nom.trim()));
-            }
-
-            if ("updateGroupe".equals(action)) {
-                return nom != null && !nom.trim().isEmpty() && idParam != null
-                        && dao.updateGroupe(new GroupeFanfare(Long.parseLong(idParam), nom.trim()));
-            }
-
-            if ("deleteGroupe".equals(action)) {
-                return idParam != null && dao.deleteGroupe(Long.parseLong(idParam));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 }

@@ -204,62 +204,6 @@
             color: #c62828;
         }
 
-        .admin-panel {
-            border-top: 1px solid var(--border);
-            margin-top: 32px;
-            padding-top: 28px;
-        }
-
-        .admin-grid {
-            display: grid;
-            gap: 24px;
-        }
-
-        .admin-add-form {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .admin-list {
-            display: grid;
-            gap: 10px;
-        }
-
-        .admin-row {
-            display: grid;
-            grid-template-columns: 1fr auto auto;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .admin-edit-form,
-        .delete-form {
-            display: contents;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-        }
-
-        .admin-panel button {
-            width: auto;
-            white-space: nowrap;
-        }
-
-        .btn-delete {
-            background-color: #c62828;
-        }
-
-        .btn-delete:hover {
-            background-color: #a31818;
-        }
     </style>
 </head>
 
@@ -368,75 +312,6 @@
             </button>
 
         </form>
-
-        <%-- Panneau reserve aux administrateurs pour maintenir les listes de reference --%>
-        <% if (fanfaron.getAdmin()) { %>
-            <div class="admin-panel">
-                <h2>Administration des instruments et groupes</h2>
-
-                <div class="admin-grid">
-                    <section>
-                        <h3>Instruments</h3>
-
-                        <form class="admin-add-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
-                            <input type="hidden" name="action" value="addInstrument">
-                            <input type="text" name="nom" placeholder="Nouvel instrument" required>
-                            <button type="submit">Ajouter</button>
-                        </form>
-
-                        <div class="admin-list">
-                            <% for (Instrument instrument : instruments) { %>
-                                <div class="admin-row">
-                                    <form class="admin-edit-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
-                                        <input type="hidden" name="action" value="updateInstrument">
-                                        <input type="hidden" name="id" value="<%= instrument.getId() %>">
-                                        <input type="text" name="nom" value="<%= h(instrument.getNom()) %>" required>
-                                        <button type="submit">Renommer</button>
-                                    </form>
-
-                                    <form class="delete-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
-                                        <input type="hidden" name="action" value="deleteInstrument">
-                                        <input type="hidden" name="id" value="<%= instrument.getId() %>">
-                                        <button class="btn-delete" type="submit"
-                                                onclick="return confirm('Supprimer cet instrument ?')">Supprimer</button>
-                                    </form>
-                                </div>
-                            <% } %>
-                        </div>
-                    </section>
-
-                    <section>
-                        <h3>Groupes</h3>
-
-                        <form class="admin-add-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
-                            <input type="hidden" name="action" value="addGroupe">
-                            <input type="text" name="nom" placeholder="Nouveau groupe" required>
-                            <button type="submit">Ajouter</button>
-                        </form>
-
-                        <div class="admin-list">
-                            <% for (GroupeFanfare groupe : groupes) { %>
-                                <div class="admin-row">
-                                    <form class="admin-edit-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
-                                        <input type="hidden" name="action" value="updateGroupe">
-                                        <input type="hidden" name="id" value="<%= groupe.getId() %>">
-                                        <input type="text" name="nom" value="<%= h(groupe.getNom()) %>" required>
-                                        <button type="submit">Renommer</button>
-                                    </form>
-
-                                    <form class="delete-form" method="POST" action="<%= request.getContextPath() %>/mes-groupes">
-                                        <input type="hidden" name="action" value="deleteGroupe">
-                                        <input type="hidden" name="id" value="<%= groupe.getId() %>">
-                                        <button class="btn-delete" type="submit"
-                                                onclick="return confirm('Supprimer ce groupe ?')">Supprimer</button>
-                                    </form>
-                                </div>
-                            <% } %>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        <% } %>
 
     </div>
 

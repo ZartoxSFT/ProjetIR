@@ -9,6 +9,8 @@
         - Echaper les valeurs dynamiques avant affichage HTML
     --%>
     <%@ page import="modele.Fanfaron" %>
+    <%@ page import="modele.Instrument" %>
+    <%@ page import="modele.GroupeFanfare" %>
         <%@ page import="java.util.List" %>
         <%!
             // Helper d'echappement HTML pour securiser les donnees affichees
@@ -249,6 +251,44 @@
                     .actions button {
                         padding: 6px 12px;
                         font-size: 12px;
+                    }
+
+                    .reference-grid {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 24px;
+                    }
+
+                    .reference-add-form {
+                        display: grid;
+                        grid-template-columns: 1fr auto;
+                        gap: 10px;
+                        margin-bottom: 14px;
+                    }
+
+                    .reference-list {
+                        display: grid;
+                        gap: 10px;
+                    }
+
+                    .reference-row {
+                        display: grid;
+                        grid-template-columns: 1fr auto auto;
+                        gap: 8px;
+                        align-items: center;
+                    }
+
+                    .reference-edit-form,
+                    .reference-delete-form {
+                        display: contents;
+                    }
+
+                    .reference-section h3 {
+                        margin-top: 0;
+                    }
+
+                    .reference-section button {
+                        white-space: nowrap;
                     }
 
                     .role-badge {
@@ -524,6 +564,80 @@
                                                                     <% } } %>
                                                         </tbody>
                                                     </table>
+                                                </div>
+
+                                                <div class="section">
+                                                    <h2>Administration des instruments et groupes</h2>
+
+                                                    <div class="reference-grid">
+                                                        <section class="reference-section">
+                                                            <h3>Instruments</h3>
+
+                                                            <form class="reference-add-form" method="POST" action="admin">
+                                                                <input type="hidden" name="action" value="addInstrument">
+                                                                <input type="text" name="nom" placeholder="Nouvel instrument" required>
+                                                                <button type="submit">Ajouter</button>
+                                                            </form>
+
+                                                            <div class="reference-list">
+                                                                <% List<Instrument> instruments = (List<Instrument>)
+                                                                        request.getAttribute("instruments");
+                                                                        if (instruments != null) {
+                                                                        for (Instrument instrument : instruments) {
+                                                                        %>
+                                                                        <div class="reference-row">
+                                                                            <form class="reference-edit-form" method="POST" action="admin">
+                                                                                <input type="hidden" name="action" value="updateInstrument">
+                                                                                <input type="hidden" name="id" value="<%= instrument.getId() %>">
+                                                                                <input type="text" name="nom" value="<%= h(instrument.getNom()) %>" required>
+                                                                                <button type="submit" class="btn-secondary">Renommer</button>
+                                                                            </form>
+
+                                                                            <form class="reference-delete-form" method="POST" action="admin">
+                                                                                <input type="hidden" name="action" value="deleteInstrument">
+                                                                                <input type="hidden" name="id" value="<%= instrument.getId() %>">
+                                                                                <button class="btn-delete" type="submit"
+                                                                                    onclick="return confirm('Supprimer cet instrument ?')">Supprimer</button>
+                                                                            </form>
+                                                                        </div>
+                                                                        <% } } %>
+                                                            </div>
+                                                        </section>
+
+                                                        <section class="reference-section">
+                                                            <h3>Groupes</h3>
+
+                                                            <form class="reference-add-form" method="POST" action="admin">
+                                                                <input type="hidden" name="action" value="addGroupe">
+                                                                <input type="text" name="nom" placeholder="Nouveau groupe" required>
+                                                                <button type="submit">Ajouter</button>
+                                                            </form>
+
+                                                            <div class="reference-list">
+                                                                <% List<GroupeFanfare> groupes = (List<GroupeFanfare>)
+                                                                        request.getAttribute("groupes");
+                                                                        if (groupes != null) {
+                                                                        for (GroupeFanfare groupe : groupes) {
+                                                                        %>
+                                                                        <div class="reference-row">
+                                                                            <form class="reference-edit-form" method="POST" action="admin">
+                                                                                <input type="hidden" name="action" value="updateGroupe">
+                                                                                <input type="hidden" name="id" value="<%= groupe.getId() %>">
+                                                                                <input type="text" name="nom" value="<%= h(groupe.getNom()) %>" required>
+                                                                                <button type="submit" class="btn-secondary">Renommer</button>
+                                                                            </form>
+
+                                                                            <form class="reference-delete-form" method="POST" action="admin">
+                                                                                <input type="hidden" name="action" value="deleteGroupe">
+                                                                                <input type="hidden" name="id" value="<%= groupe.getId() %>">
+                                                                                <button class="btn-delete" type="submit"
+                                                                                    onclick="return confirm('Supprimer ce groupe ?')">Supprimer</button>
+                                                                            </form>
+                                                                        </div>
+                                                                        <% } } %>
+                                                            </div>
+                                                        </section>
+                                                    </div>
                                                 </div>
                     </div>
             </body>

@@ -9,7 +9,10 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.annotation.WebServlet;
 import dao.DAOFactory;
 import dao.FanfaronDAO;
+import dao.InstrumentDAO;
 import modele.Fanfaron;
+import modele.GroupeFanfare;
+import modele.Instrument;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -83,11 +86,70 @@ public class AdminServlet extends HttpServlet {
         }
 
         // Chargement de la liste complète des fanfarons pour affichage dans le tableau
-        List<Fanfaron> fanfarons = dao.getAllFanfarons();
-        request.setAttribute("fanfarons", fanfarons);
+        chargerDonneesAdministration(request, dao);
 
         // Forward vers la page JSP d'administration
         request.getRequestDispatcher("/vue/admin.jsp").forward(request, response);
+    }
+
+    private void chargerDonneesAdministration(HttpServletRequest request, FanfaronDAO fanfaronDao) {
+        InstrumentDAO instrumentDao = DAOFactory.getInstrumentDAO();
+
+        List<Fanfaron> fanfarons = fanfaronDao.getAllFanfarons();
+        List<Instrument> instruments = instrumentDao.findAllInstruments();
+        List<GroupeFanfare> groupes = instrumentDao.findAllGroupes();
+
+        request.setAttribute("fanfarons", fanfarons);
+        request.setAttribute("instruments", instruments);
+        request.setAttribute("groupes", groupes);
+    }
+
+    private boolean isActionReference(String action) {
+        return "addInstrument".equals(action)
+                || "updateInstrument".equals(action)
+                || "deleteInstrument".equals(action)
+                || "addGroupe".equals(action)
+                || "updateGroupe".equals(action)
+                || "deleteGroupe".equals(action);
+    }
+
+    private boolean handleReferenceAction(HttpServletRequest request, InstrumentDAO dao, String action) {
+        try {
+            String nom = request.getParameter("nom");
+            String idParam = request.getParameter("id");
+
+            if ("addInstrument".equals(action)) {
+                return nom != null && !nom.trim().isEmpty()
+                        && dao.insertInstrument(new Instrument(null, nom.trim()));
+            }
+
+            if ("updateInstrument".equals(action)) {
+                return nom != null && !nom.trim().isEmpty() && idParam != null
+                        && dao.updateInstrument(new Instrument(Long.parseLong(idParam), nom.trim()));
+            }
+
+            if ("deleteInstrument".equals(action)) {
+                return idParam != null && dao.deleteInstrument(Long.parseLong(idParam));
+            }
+
+            if ("addGroupe".equals(action)) {
+                return nom != null && !nom.trim().isEmpty()
+                        && dao.insertGroupe(new GroupeFanfare(null, nom.trim()));
+            }
+
+            if ("updateGroupe".equals(action)) {
+                return nom != null && !nom.trim().isEmpty() && idParam != null
+                        && dao.updateGroupe(new GroupeFanfare(Long.parseLong(idParam), nom.trim()));
+            }
+
+            if ("deleteGroupe".equals(action)) {
+                return idParam != null && dao.deleteGroupe(Long.parseLong(idParam));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     /**
@@ -115,6 +177,7 @@ public class AdminServlet extends HttpServlet {
         
         // Initialisation du DAO
         FanfaronDAO dao = DAOFactory.getFanfaronDAO();
+        InstrumentDAO instrumentDao = DAOFactory.getInstrumentDAO();
 
         // Traitement des actions POST
         if ("add".equals(action)) {
@@ -123,11 +186,16 @@ public class AdminServlet extends HttpServlet {
         } else if ("update".equals(action)) {
             // ACTION UPDATE : Modification d'un fanfaron existant
             handleUpdateFanfaron(request, dao);
+        } else if (isActionReference(action)) {
+            if (handleReferenceAction(request, instrumentDao, action)) {
+                request.setAttribute("succes", "Modification enregistrÃ©e.");
+            } else {
+                request.setAttribute("erreur", "Impossible d'effectuer cette modification.");
+            }
         }
 
         // Chargement de la liste des fanfarons après l'opération
-        java.util.List<Fanfaron> fanfarons = dao.getAllFanfarons();
-        request.setAttribute("fanfarons", fanfarons);
+        chargerDonneesAdministration(request, dao);
 
         // Forward vers la page admin pour affichage
         request.getRequestDispatcher("/vue/admin.jsp").forward(request, response);
