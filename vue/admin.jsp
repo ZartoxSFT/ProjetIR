@@ -548,16 +548,19 @@
                                                                                     <button type="button"
                                                                                         class="btn-secondary">Modifier</button>
                                                                                 </a>
-                                                                                <form method="GET" action="admin"
-                                                                                    style="display:inline;">
-                                                                                    <input type="hidden" name="action"
-                                                                                        value="delete">
-                                                                                    <input type="hidden" name="id"
-                                                                                        value="<%= fan.getId() %>">
-                                                                                    <button type="submit"
-                                                                                        class="btn-delete"
-                                                                                        onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
-                                                                                </form>
+                                                                                <%-- La servlet bloque aussi cette action : la vue evite simplement de proposer l'auto-suppression. --%>
+                                                                                <% if (!fan.getId().equals(utilisateur.getId())) { %>
+                                                                                    <form method="GET" action="admin"
+                                                                                        style="display:inline;">
+                                                                                        <input type="hidden" name="action"
+                                                                                            value="delete">
+                                                                                        <input type="hidden" name="id"
+                                                                                            value="<%= fan.getId() %>">
+                                                                                        <button type="submit"
+                                                                                            class="btn-delete"
+                                                                                            onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
+                                                                                    </form>
+                                                                                <% } %>
                                                                             </div>
                                                                         </td>
                                                                     </tr>

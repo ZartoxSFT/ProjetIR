@@ -29,10 +29,12 @@ import java.util.List;
  * - Modification des informations d'un fanfaron
  * - Suppression de fanfarons
  * - Gestion du statut administrateur
+ * - Gestion des instruments et groupes de reference
  * 
  * Sécurité :
  * - Vérification du statut admin à chaque requête
- * - Redirection vers la connexion si accès non autorisé
+ * - Redirection si accès non autorisé
+ * - Interdiction pour un administrateur de supprimer son propre compte
  * 
  * URL de routage : /admin
  */
@@ -70,7 +72,12 @@ public class AdminServlet extends HttpServlet {
         if ("delete".equals(action)) {
             // ACTION DELETE : Suppression d'un fanfaron par son ID
             long id = Long.parseLong(request.getParameter("id"));
-            if (dao.deleteFanfaron(id)) {
+
+            // RÈGLE MÉTIER : un administrateur ne peut pas supprimer son propre compte.
+            // Cela évite qu'il se retire lui-même l'accès à l'administration pendant sa session.
+            if (id == utilisateur.getId()) {
+                request.setAttribute("erreur", "Vous ne pouvez pas supprimer votre propre compte administrateur.");
+            } else if (dao.deleteFanfaron(id)) {
                 // Message de succès si la suppression a réussi
                 request.setAttribute("succes", "Fanfaron supprimé avec succès.");
             } else {

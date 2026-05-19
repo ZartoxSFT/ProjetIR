@@ -48,7 +48,7 @@ public class EvenementJDBCDAO implements EvenementDAO {
      * Recupere tous les evenements tries du plus recent au plus ancien.
      */
     public List<Evenement> getAllEvenements() {
-        String sql = "SELECT id, nom, horodatage, duree, lieu, description FROM evenement ORDER BY horodatage DESC";
+        String sql = "SELECT id, type_evenement, nom, horodatage, duree, lieu, description FROM evenement ORDER BY horodatage DESC";
         List<Evenement> evenements = new ArrayList<>();
 
         try (Connection connexion = getConnection();
@@ -71,7 +71,7 @@ public class EvenementJDBCDAO implements EvenementDAO {
      * La transaction garantit que l'evenement et son organisation sont enregistres ensemble.
      */
     public boolean insertAvecOrganisateur(Evenement evenement, long idFanfaron) {
-        String sqlEvenement = "INSERT INTO evenement (nom, horodatage, duree, lieu, description) VALUES (?, ?, ?, ?, ?)";
+        String sqlEvenement = "INSERT INTO evenement (type_evenement, nom, horodatage, duree, lieu, description) VALUES (?, ?, ?, ?, ?, ?)";
         String sqlOrganisation = "INSERT INTO organisation_evenement (id_fanfaron, id_evenement) VALUES (?, ?)";
 
         try (Connection connexion = getConnection()) {
@@ -79,11 +79,12 @@ public class EvenementJDBCDAO implements EvenementDAO {
             connexion.setAutoCommit(false);
 
             try (PreparedStatement ps = connexion.prepareStatement(sqlEvenement, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, evenement.getNom());
-                ps.setTimestamp(2, evenement.getHorodatage());
-                ps.setInt(3, evenement.getDuree());
-                ps.setString(4, evenement.getLieu());
-                ps.setString(5, evenement.getDescription());
+                ps.setString(1, evenement.getTypeEvenement());
+                ps.setString(2, evenement.getNom());
+                ps.setTimestamp(3, evenement.getHorodatage());
+                ps.setInt(4, evenement.getDuree());
+                ps.setString(5, evenement.getLieu());
+                ps.setString(6, evenement.getDescription());
 
                 int count = ps.executeUpdate();
                 if (count == 0) {
@@ -121,7 +122,7 @@ public class EvenementJDBCDAO implements EvenementDAO {
      * Le resultat combine les donnees de l'evenement avec l'instrument et le statut.
      */
     public List<EvenementInscrit> getEvenementsInscritsByFanfaron(long idFanfaron) {
-        String sql = "SELECT e.id, e.nom, e.horodatage, e.duree, e.lieu, e.description, "
+        String sql = "SELECT e.id, e.type_evenement, e.nom, e.horodatage, e.duree, e.lieu, e.description, "
                 + "i.nom AS instrument, ins.statut "
                 + "FROM inscription ins "
                 + "JOIN evenement e ON e.id = ins.id_evenement "
@@ -139,6 +140,7 @@ public class EvenementJDBCDAO implements EvenementDAO {
                 while (rs.next()) {
                     EvenementInscrit evenement = new EvenementInscrit();
                     evenement.setId(rs.getInt("id"));
+                    evenement.setTypeEvenement(rs.getString("type_evenement"));
                     evenement.setNom(rs.getString("nom"));
                     evenement.setHorodatage(rs.getTimestamp("horodatage"));
                     evenement.setDuree(rs.getInt("duree"));
@@ -160,7 +162,7 @@ public class EvenementJDBCDAO implements EvenementDAO {
      * Recupere un evenement par son identifiant.
      */
     public Evenement getById(int id) throws SQLException {
-        String sql = "SELECT id, nom, horodatage, duree, lieu, description FROM evenement WHERE id = ?";
+        String sql = "SELECT id, type_evenement, nom, horodatage, duree, lieu, description FROM evenement WHERE id = ?";
 
         try (Connection connexion = getConnection();
                 PreparedStatement ps = connexion.prepareStatement(sql)) {
@@ -182,17 +184,18 @@ public class EvenementJDBCDAO implements EvenementDAO {
      * Met a jour les champs modifiables d'un evenement.
      */
     public boolean updateEvenement(Evenement evenement) {
-        String sql = "UPDATE evenement SET nom = ?, horodatage = ?, duree = ?, lieu = ?, description = ? WHERE id = ?";
+        String sql = "UPDATE evenement SET type_evenement = ?, nom = ?, horodatage = ?, duree = ?, lieu = ?, description = ? WHERE id = ?";
 
         try (Connection connexion = getConnection();
                 PreparedStatement ps = connexion.prepareStatement(sql)) {
 
-            ps.setString(1, evenement.getNom());
-            ps.setTimestamp(2, evenement.getHorodatage());
-            ps.setInt(3, evenement.getDuree());
-            ps.setString(4, evenement.getLieu());
-            ps.setString(5, evenement.getDescription());
-            ps.setInt(6, evenement.getId());
+            ps.setString(1, evenement.getTypeEvenement());
+            ps.setString(2, evenement.getNom());
+            ps.setTimestamp(3, evenement.getHorodatage());
+            ps.setInt(4, evenement.getDuree());
+            ps.setString(5, evenement.getLieu());
+            ps.setString(6, evenement.getDescription());
+            ps.setInt(7, evenement.getId());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -223,6 +226,7 @@ public class EvenementJDBCDAO implements EvenementDAO {
     private Evenement mapEvenement(ResultSet rs) throws SQLException {
         Evenement evenement = new Evenement();
         evenement.setId(rs.getInt("id"));
+        evenement.setTypeEvenement(rs.getString("type_evenement"));
         evenement.setNom(rs.getString("nom"));
         evenement.setHorodatage(rs.getTimestamp("horodatage"));
         evenement.setDuree(rs.getInt("duree"));

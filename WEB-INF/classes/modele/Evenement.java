@@ -4,57 +4,51 @@ import java.sql.Timestamp;
 
 /**
  * CLASSE MODELE - EVENEMENT
- * 
- * Représente un événement organisé par la fanfare
- * C'est une POJO utilisée pour mapper les données de la table evenement
- * 
+ *
+ * Represente un evenement organise par la fanfare.
+ * C'est une POJO utilisee pour mapper les donnees de la table evenement.
+ *
  * Attributs :
  * - id : Identifiant unique
- * - nom : Nom de l'événement (ex: "Concert printemps 2025")
- * - horodatage : Date et heure de l'événement
- * - duree : Durée en minutes
- * - lieu : Lieu de l'événement (ex: "Salle des fêtes")
- * - description : Description détaillée de l'événement
- * 
- * Utilisation :
- * - Affichage de la liste des événements
- * - Inscription des fanfarons aux événements
- * - Gestion des inscriptions (présent/absent/incertain)
- * 
- * Lien avec Fanfaron :
- * - Un événement peut avoir plusieurs inscriptions
- * - Une inscription lie un fanfaron à un événement
+ * - typeEvenement : Type choisi dans une liste (atelier, repetition, prestation)
+ * - nom : Nom libre de l'evenement (ex: "Concert printemps 2025")
+ * - horodatage : Date et heure de l'evenement
+ * - duree : Duree en minutes
+ * - lieu : Lieu de l'evenement
+ * - description : Description detaillee de l'evenement
  */
 public class Evenement {
     // Identifiant unique
     private int id;
-    
+
     // Informations de base
-    private String nom;              // Nom de l'événement
-    private Timestamp horodatage;    // Date et heure de l'événement
-    private int duree;               // Durée en minutes
-    private String lieu;             // Lieu où se déroule l'événement
-    private String description;      // Description détaillée
+    private String typeEvenement;    // Type : atelier, repetition, prestation
+    private String nom;              // Nom libre de l'evenement
+    private Timestamp horodatage;    // Date et heure de l'evenement
+    private int duree;               // Duree en minutes
+    private String lieu;             // Lieu ou se deroule l'evenement
+    private String description;      // Description detaillee
 
     /**
-     * Constructeur par défaut
-     * Utilisé par les DAO pour créer des instances
+     * Constructeur par defaut.
+     * Utilise par les DAO pour creer des instances.
      */
     public Evenement() {
     }
 
     /**
-     * Constructeur avec tous les paramètres
-     * Utilisé lors de la création d'un nouvel événement
-     * 
-     * @param nom Nom de l'événement
-     * @param horodatage Date et heure de l'événement
-     * @param duree Durée en minutes
-     * @param lieu Lieu de l'événement
-     * @param description Description de l'événement
+     * Constructeur avec tous les parametres.
+     *
+     * @param typeEvenement Type de l'evenement
+     * @param nom Nom libre de l'evenement
+     * @param horodatage Date et heure de l'evenement
+     * @param duree Duree en minutes
+     * @param lieu Lieu de l'evenement
+     * @param description Description de l'evenement
      */
-    public Evenement(String nom, Timestamp horodatage, int duree, String lieu,
+    public Evenement(String typeEvenement, String nom, Timestamp horodatage, int duree, String lieu,
             String description) {
+        this.typeEvenement = typeEvenement;
         this.nom = nom;
         this.horodatage = horodatage;
         this.duree = duree;
@@ -63,11 +57,7 @@ public class Evenement {
     }
 
     // ========== GETTERS ET SETTERS ==========
-    
-    /**
-     * Obtient l'identifiant unique de l'événement
-     * @return L'ID en base de données
-     */
+
     public int getId() {
         return id;
     }
@@ -77,7 +67,21 @@ public class Evenement {
     }
 
     /**
-     * Obtient le nom de l'événement
+     * Obtient le type de l'evenement.
+     *
+     * @return Le type : atelier, repetition, ou prestation
+     */
+    public String getTypeEvenement() {
+        return typeEvenement;
+    }
+
+    public void setTypeEvenement(String typeEvenement) {
+        this.typeEvenement = typeEvenement;
+    }
+
+    /**
+     * Obtient le nom libre de l'evenement.
+     *
      * @return Le nom (ex: "Concert printemps")
      */
     public String getNom() {
@@ -88,10 +92,6 @@ public class Evenement {
         this.nom = nom;
     }
 
-    /**
-     * Obtient la date et heure de l'événement
-     * @return Le timestamp (date + heure + fuseau horaire)
-     */
     public Timestamp getHorodatage() {
         return horodatage;
     }
@@ -100,10 +100,6 @@ public class Evenement {
         this.horodatage = horodatage;
     }
 
-    /**
-     * Obtient la durée de l'événement
-     * @return La durée en minutes
-     */
     public int getDuree() {
         return duree;
     }
@@ -112,10 +108,6 @@ public class Evenement {
         this.duree = duree;
     }
 
-    /**
-     * Obtient le lieu de l'événement
-     * @return Le lieu (ex: "Salle des fêtes")
-     */
     public String getLieu() {
         return lieu;
     }
@@ -124,10 +116,6 @@ public class Evenement {
         this.lieu = lieu;
     }
 
-    /**
-     * Obtient la description de l'événement
-     * @return La description détaillée
-     */
     public String getDescription() {
         return description;
     }

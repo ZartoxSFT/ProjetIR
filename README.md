@@ -152,9 +152,8 @@ Contient les groupes de fanfare.
 #### `evenement`
 
 Contient les evenements.
-
-Dans le script SQL, la table contient aussi un champ `type_evenement`.
-Dans l'application actuelle, les formulaires manipulent surtout le nom de l'evenement et les informations pratiques : date, duree, lieu et description.
+Les informations gerees sont le type d'evenement, le nom libre, la date, la duree, le lieu et la description.
+Le champ `type_evenement` est limite aux valeurs `atelier`, `repetition` et `prestation`.
 
 ### Tables d'association
 
@@ -206,6 +205,7 @@ Le projet implemente plusieurs mecanismes de securite :
 - protection des pages administrateur ;
 - verification des doublons email / pseudo ;
 - controle des actions reservees aux administrateurs ;
+- interdiction pour un administrateur de supprimer son propre compte ;
 - controle des actions reservees a la commission prestation pour les evenements ;
 - controle de l'annulation des inscriptions aux evenements.
 
@@ -338,6 +338,7 @@ http://localhost:8080/ProjetIR
 ### Administrateur
 
 - gestion des comptes ;
+- impossibilite de supprimer son propre compte administrateur ;
 - ajout, suppression et modification des instruments ;
 - ajout, suppression et modification des groupes ;
 - gestion des evenements ;

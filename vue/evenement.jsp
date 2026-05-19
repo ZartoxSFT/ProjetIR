@@ -376,11 +376,11 @@
                                                                                             value="add-evenement">
                                                                                         <div class="form-row">
                                                                                             <div class="form-group">
-                                                                                                <label for="nom">Nom
+                                                                                                <label for="typeEvenement">Type
                                                                                                     *</label>
                                                                                                 <select
                                                                                                     class="form-control"
-                                                                                                    id="nom" name="nom"
+                                                                                                    id="typeEvenement" name="typeEvenement"
                                                                                                     required>
                                                                                                     <option value="">--
                                                                                                         Selectionner --
@@ -396,6 +396,15 @@
                                                                                                         value="prestation">
                                                                                                         Prestation
                                                                                                     </option>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="form-group">
+                                                                                                <label for="nom">Nom
+                                                                                                    *</label>
+                                                                                                <input type="text"
+                                                                                                    id="nom"
+                                                                                                    name="nom"
+                                                                                                    required>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="form-row">
@@ -451,13 +460,20 @@
                                                                         value="<%= evenementAEditer.getId() %>">
                                                                     <div class="form-row">
                                                                         <div class="form-group">
-                                                                            <label for="editNom">Nom *</label>
-                                                                            <select id="editNom" name="nom" required>
-                                                                                <option value="atelier" <%= "atelier".equals(evenementAEditer.getNom()) ? "selected" : "" %>>Atelier</option>
-                                                                                <option value="repetition" <%= "repetition".equals(evenementAEditer.getNom()) ? "selected" : "" %>>Repetition</option>
-                                                                                <option value="prestation" <%= "prestation".equals(evenementAEditer.getNom()) ? "selected" : "" %>>Prestation</option>
+                                                                            <label for="editTypeEvenement">Type *</label>
+                                                                            <select id="editTypeEvenement" name="typeEvenement" required>
+                                                                                <option value="atelier" <%= "atelier".equals(evenementAEditer.getTypeEvenement()) ? "selected" : "" %>>Atelier</option>
+                                                                                <option value="repetition" <%= "repetition".equals(evenementAEditer.getTypeEvenement()) ? "selected" : "" %>>Repetition</option>
+                                                                                <option value="prestation" <%= "prestation".equals(evenementAEditer.getTypeEvenement()) ? "selected" : "" %>>Prestation</option>
                                                                             </select>
                                                                         </div>
+                                                                        <div class="form-group">
+                                                                            <label for="editNom">Nom *</label>
+                                                                            <input type="text" id="editNom" name="nom"
+                                                                                value="<%= h(evenementAEditer.getNom()) %>" required>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
                                                                         <div class="form-group">
                                                                             <label for="editHorodatage">Horodatage *</label>
                                                                             <input type="datetime-local" id="editHorodatage"
@@ -499,6 +515,7 @@
                                                                     <table class="event-table">
                                                                         <thead>
                                                                             <tr>
+                                                                                <th>Type</th>
                                                                                 <th>Nom</th>
                                                                                 <th>Date</th>
                                                                                 <th>Duree</th>
@@ -510,6 +527,9 @@
                                                                         <tbody>
                                                                             <% for (Evenement ev : evenements) { %>
                                                                                 <tr>
+                                                                                    <td>
+                                                                                        <%= h(ev.getTypeEvenement()) %>
+                                                                                    </td>
                                                                                     <td>
                                                                                         <%= h(ev.getNom()) %>
                                                                                     </td>
@@ -575,7 +595,8 @@
                                                                 <% } else { %>
                                                                     <p>
                                                                         <strong>Evenement :</strong>
-                                                                        <%= h(evenementSelectionne.getNom()) %>
+                                                                        <%= h(evenementSelectionne.getTypeEvenement()) %>
+                                                                        - <%= h(evenementSelectionne.getNom()) %>
                                                                             (<%= evenementSelectionne.getHorodatage() == null ? "" : dateHeureFormat.format(evenementSelectionne.getHorodatage()) %>
                                                                                 )
                                                                     </p>

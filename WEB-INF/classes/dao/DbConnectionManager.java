@@ -25,7 +25,7 @@ import java.util.Properties;
  * - db.password : Mot de passe PostgreSQL
  * 
  * Exemple de db.properties :
- * db.url=jdbc:postgresql://localhost:5432/fanfarehub
+ * db.url=jdbc:postgresql://localhost:5432/projet
  * db.user=postgres
  * db.password=password
  */
