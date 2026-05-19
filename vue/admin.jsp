@@ -351,7 +351,7 @@
 
                                         <!-- Section Ajouter un utilisateur -->
                                         <div class="section">
-                                            <h2>➕ Ajouter un nouveau fanfaron</h2>
+                                            <h2>Ajouter un nouveau fanfaron</h2>
                                             <form method="POST" action="admin?action=add">
                                                 <input type="hidden" name="action" value="add">
                                                 <div class="form-row">
@@ -418,7 +418,7 @@
                                         <% Fanfaron fanfaronEdit=(Fanfaron) request.getAttribute("fanfaron"); if
                                             (fanfaronEdit !=null) { %>
                                             <div class="section" style="border-left: 4px solid var(--accent);">
-                                                <h2>✏️ Modifier le fanfaron</h2>
+                                                <h2>Modifier le fanfaron</h2>
                                                 <form method="POST" action="admin?action=update">
                                                     <input type="hidden" name="action" value="update">
                                                     <input type="hidden" name="id" value="<%= fanfaronEdit.getId() %>">
@@ -504,7 +504,7 @@
 
                                                 <!-- Section Liste des utilisateurs -->
                                                 <div class="section">
-                                                    <h2>👥 Liste des fanfarons</h2>
+                                                    <h2>Liste des fanfarons</h2>
                                                     <table>
                                                         <thead>
                                                             <tr>

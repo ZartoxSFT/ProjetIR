@@ -162,7 +162,7 @@
     <body>
         <div class="card">
             <div class="header">
-                <h1>🎺 FanfareHub</h1>
+                <h1>FanfareHub</h1>
             </div>
             <div class="content">
                 <h2 style="text-align: center; color: var(--accent); margin-top: 0;">Connexion</h2>
