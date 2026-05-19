@@ -247,7 +247,7 @@
                                     <ul>
                                         <% for (EvenementInscrit evenement : evenementsInscrits) { %>
                                             <li>
-                                                <strong><%= h(evenement.getTypeEvenement()) %> - <%= h(evenement.getNom()) %></strong><br>
+                                                <strong><%= h(evenement.getNom()) %></strong><br>
                                                 <span class="muted">
                                                     <%= evenement.getHorodatage() == null ? "" : dateHeureFormat.format(evenement.getHorodatage()) %>
                                                     <% if (evenement.getLieu() != null && !evenement.getLieu().isBlank()) { %>

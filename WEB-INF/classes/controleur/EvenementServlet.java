@@ -47,8 +47,8 @@ public class EvenementServlet extends HttpServlet {
     private static final Set<String> STATUTS_VALIDES = new HashSet<>(
             Arrays.asList("present", "absent", "incertain"));
 
-    // Liste blanche des types proposes dans les formulaires et acceptes par la base
-    private static final Set<String> TYPES_EVENEMENT_VALIDES = new HashSet<>(
+    // Liste blanche des titres/types proposes dans les formulaires
+    private static final Set<String> NOMS_EVENEMENT_VALIDES = new HashSet<>(
             Arrays.asList("atelier", "repetition", "prestation"));
 
     /**
@@ -281,21 +281,20 @@ public class EvenementServlet extends HttpServlet {
      * Construit un objet Evenement a partir des champs communs aux formulaires.
      */
     private Evenement construireEvenementDepuisRequete(HttpServletRequest request) {
-        String typeEvenement = nettoyer(request.getParameter("typeEvenement"));
         String nom = nettoyer(request.getParameter("nom"));
         String horodatage = nettoyer(request.getParameter("horodatage"));
         String dureeStr = nettoyer(request.getParameter("duree"));
         String lieu = nettoyer(request.getParameter("lieu"));
         String description = nettoyer(request.getParameter("description"));
 
-        if (typeEvenement.isEmpty() || nom.isEmpty() || horodatage.isEmpty()
+        if (nom.isEmpty() || horodatage.isEmpty()
                 || dureeStr.isEmpty() || lieu.isEmpty()) {
             request.setAttribute("erreur", "Tous les champs obligatoires doivent etre remplis.");
             return null;
         }
 
-        if (!TYPES_EVENEMENT_VALIDES.contains(typeEvenement)) {
-            request.setAttribute("erreur", "Type d'evenement invalide.");
+        if (!NOMS_EVENEMENT_VALIDES.contains(nom)) {
+            request.setAttribute("erreur", "Titre d'evenement invalide.");
             return null;
         }
 
@@ -319,7 +318,7 @@ public class EvenementServlet extends HttpServlet {
             description = null;
         }
 
-        return new Evenement(typeEvenement, nom, horodatageTs, duree, lieu, description);
+        return new Evenement(nom, horodatageTs, duree, lieu, description);
     }
 
     /**

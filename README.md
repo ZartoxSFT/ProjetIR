@@ -152,8 +152,9 @@ Contient les groupes de fanfare.
 #### `evenement`
 
 Contient les evenements.
-Les informations gerees sont le type d'evenement, le nom libre, la date, la duree, le lieu et la description.
-Le champ `type_evenement` est limite aux valeurs `atelier`, `repetition` et `prestation`.
+Les informations gerees sont le nom de l'evenement, la date, la duree, le lieu et la description.
+Dans l'application actuelle, le nom de l'evenement est choisi dans une liste : `atelier`, `repetition` ou `prestation`.
+La base applique aussi cette liste avec une contrainte `CHECK` sur la colonne `nom`.
 
 ### Tables d'association
 

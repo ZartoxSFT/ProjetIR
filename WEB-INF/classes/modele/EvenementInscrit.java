@@ -14,8 +14,7 @@ public class EvenementInscrit {
     private int id;
 
     // Informations de l'evenement
-    private String typeEvenement; // Type : atelier, repetition, prestation
-    private String nom;           // Nom libre de l'evenement
+    private String nom;           // Type/titre de l'evenement
     private Timestamp horodatage; // Date et heure
     private int duree;            // Duree en minutes
     private String lieu;          // Lieu
@@ -31,14 +30,6 @@ public class EvenementInscrit {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getTypeEvenement() {
-        return typeEvenement;
-    }
-
-    public void setTypeEvenement(String typeEvenement) {
-        this.typeEvenement = typeEvenement;
     }
 
     public String getNom() {
