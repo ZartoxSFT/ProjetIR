@@ -19,7 +19,8 @@ L'application permet :
 - le choix des groupes auxquels appartient chaque fanfaron ;
 - la gestion des evenements ;
 - la gestion des inscriptions aux evenements ;
-- l'administration des utilisateurs, instruments et groupes.
+- l'administration des utilisateurs, instruments et groupes ;
+- la creation, modification et suppression d'evenements par les administrateurs ou les membres de la commission prestation.
 
 Le projet suit une architecture MVC :
 
@@ -27,6 +28,9 @@ Le projet suit une architecture MVC :
 - les Servlets gerent la logique de controle ;
 - les DAO gerent l'acces aux donnees ;
 - les POJO representent les entites metier.
+
+Remarque importante : le projet ne suit pas une correspondance stricte `1 DAO = 1 POJO`.
+Certains DAO sont regroupes par fonctionnalite, par exemple `InstrumentDAO` gere les instruments, les groupes et leurs associations avec les fanfarons.
 
 ## Architecture MVC
 
@@ -64,6 +68,9 @@ Les classes metier sont situees dans `WEB-INF/classes/modele/` :
 - `EvenementInscrit`
 - `InscriptionDetail`
 
+`EvenementInscrit` et `InscriptionDetail` sont des objets enrichis utilises pour l'affichage.
+Ils ne correspondent pas directement a une table unique : ils regroupent des donnees provenant de plusieurs tables.
+
 ## Architecture DAO amelioree
 
 Le projet utilise le patron DAO ameliore vu en cours.
@@ -91,6 +98,8 @@ Les implementations JDBC contiennent les requetes SQL :
 - `InstrumentJDBCDAO`
 - `EvenementJDBCDAO`
 - `EvenementInscriptionJDBCDAO`
+
+Le nombre de DAO est donc different du nombre de POJO, car les DAO representent les acces aux donnees par domaine fonctionnel.
 
 ### DAOFactory
 
@@ -134,7 +143,7 @@ Contient les utilisateurs.
 
 #### `instrument`
 
-Contient les instruments et pupitres.
+Contient les instruments.
 
 #### `groupe_fanfare`
 
@@ -143,6 +152,9 @@ Contient les groupes de fanfare.
 #### `evenement`
 
 Contient les evenements.
+
+Dans le script SQL, la table contient aussi un champ `type_evenement`.
+Dans l'application actuelle, les formulaires manipulent surtout le nom de l'evenement et les informations pratiques : date, duree, lieu et description.
 
 ### Tables d'association
 
@@ -194,6 +206,7 @@ Le projet implemente plusieurs mecanismes de securite :
 - protection des pages administrateur ;
 - verification des doublons email / pseudo ;
 - controle des actions reservees aux administrateurs ;
+- controle des actions reservees a la commission prestation pour les evenements ;
 - controle de l'annulation des inscriptions aux evenements.
 
 ## Repartition des roles
@@ -208,7 +221,8 @@ Le projet implemente plusieurs mecanismes de securite :
 - gestion des sessions et authentification ;
 - gestion des relations many-to-many ;
 - logique metier des Servlets ;
-- securisation des formulaires et acces.
+- securisation des formulaires et acces ;
+- gestion des evenements et des inscriptions.
 
 ### Amin Messaoudi
 
@@ -218,7 +232,8 @@ Le projet implemente plusieurs mecanismes de securite :
 - integration des formulaires ;
 - gestion des vues administrateur ;
 - amelioration de l'experience utilisateur ;
-- integration des messages d'erreur et de succes.
+- integration des messages d'erreur et de succes ;
+- vues de connexion, inscription, accueil, groupes, evenements et administration.
 
 ## Execution du projet
 
@@ -234,13 +249,21 @@ Le projet implemente plusieurs mecanismes de securite :
 Creer une base :
 
 ```sql
-CREATE DATABASE fanfarehub;
+CREATE DATABASE projet;
 ```
 
 Puis executer le script :
 
 ```text
 WEB-INF/sql/script.sql
+```
+
+Une fois le script importe dans PostgreSQL, un compte administrateur est cree automatiquement.
+Il permet de se connecter directement a la plateforme avec les identifiants suivants :
+
+```text
+Login : admin
+Mot de passe : admin
 ```
 
 ### 3. Fichier `db.properties`
@@ -254,9 +277,15 @@ WEB-INF/classes/db.properties
 Contenu :
 
 ```properties
-db.url=jdbc:postgresql://localhost:5432/fanfarehub
+db.url=jdbc:postgresql://localhost:5432/projet
 db.user=login
 db.password=motdepasse
+```
+
+Dans l'environnement de developpement actuel, la base configuree dans `db.properties` est :
+
+```properties
+db.url=jdbc:postgresql://localhost:5432/projet
 ```
 
 Un fichier exemple peut etre fourni avec le projet :
@@ -314,6 +343,12 @@ http://localhost:8080/ProjetIR
 - gestion des evenements ;
 - suppression d'inscriptions aux evenements ;
 - acces a la page d'administration.
+
+### Commission prestation
+
+- proposition d'evenements ;
+- modification et suppression d'evenements ;
+- consultation des inscriptions aux evenements.
 
 ## Concepts techniques utilises
 
